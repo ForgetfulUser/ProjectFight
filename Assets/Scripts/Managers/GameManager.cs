@@ -5,26 +5,26 @@ public class GameManager : MonoBehaviour
     public PlayerManager PlayerManager;
     public HazardManager HazardManager;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         HazardManager.WakeUpManager();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    private void Start()
+    protected virtual void Start()
     {
         PlayerManager.StartManager(true);
         HazardManager.StartManager();
     }
 
     // Update is called once per frame
-    private void Update()
+    protected virtual void Update()
     {
         PlayerManager.UpdateManager();
-        HazardManager.UpdateMnager();
+        HazardManager.UpdateManager();
     }
 
-    private void LateUpdate()
+    protected virtual void LateUpdate()
     {
         //Update UI here if needed
     }

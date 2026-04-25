@@ -6,7 +6,7 @@ public class HazardManager : MonoBehaviour
 {
     public List<BaseHazard> Hazards = new List<BaseHazard>();
 
-    public void WakeUpManager()
+    public virtual void WakeUpManager()
     {
         Hazards.Clear();
 
@@ -17,7 +17,7 @@ public class HazardManager : MonoBehaviour
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public void StartManager()
+    public virtual void StartManager()
     {
         foreach(var hazard in Hazards)
         {
@@ -26,11 +26,19 @@ public class HazardManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void UpdateMnager()
+    public virtual void UpdateManager()
     {
         foreach(var haz in Hazards)
         {
             haz.UpdateHazard();
+        }
+    }
+
+    public virtual void ResetHazards()
+    {
+        foreach (var haz in Hazards)
+        {
+            haz.ResetHazard();
         }
     }
 }

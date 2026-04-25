@@ -15,4 +15,9 @@ public class BaseHazard : MonoBehaviour
     {
 
     }
+
+    public virtual void ResetHazard()
+    {
+
+    }
 }
