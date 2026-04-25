@@ -8705,6 +8705,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1424931374}
     - target: {fileID: 3255869581789678136, guid: 0f084030525061a4d9d6ead0cb0bb6e6, type: 3}
+      propertyPath: TestingPlayer
+      value: 
+      objectReference: {fileID: 1424931374}
+    - target: {fileID: 3255869581789678136, guid: 0f084030525061a4d9d6ead0cb0bb6e6, type: 3}
       propertyPath: ShouldSpawnPlayers
       value: 0
       objectReference: {fileID: 0}

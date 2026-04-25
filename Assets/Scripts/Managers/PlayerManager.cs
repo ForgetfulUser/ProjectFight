@@ -4,22 +4,27 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    public Player Player_PRFB; // If not using the spawner, assign the player to this
-    public List<Transform> PlayerSpawnPosition_TRSFMs = new List<Transform>();
+    public Player Player_PRFB;
+    private List<Transform> PlayerSpawnPosition_TRSFMs = new List<Transform>();
     public List<Player> ActivePlayers = new List<Player>();
 
     [Header("Play Test Variables")]
-    public bool ShouldSpawnPlayers = true;
+    public Player TestingPlayer;
 
     public void StartManager(bool canJump)
     {
+        foreach(var spawnPos in GetComponentsInChildren<Transform>())
+        {
+            if (spawnPos == transform) continue;
+            PlayerSpawnPosition_TRSFMs.Add(spawnPos);
+        }
         SpawnPlayers(canJump);
         Player_PRFB.StartPlayer(canJump, 0);
     }
 
     public void UpdateManager()
     {
-        if (ShouldSpawnPlayers)
+        if (TestingPlayer == null)
         {
             foreach(var player in ActivePlayers)
             {
@@ -28,18 +33,18 @@ public class PlayerManager : MonoBehaviour
         }
         else
         {
-            Player_PRFB.UpdatePlayer();
+            TestingPlayer.UpdatePlayer();
         }
 
     }
 
     private void SpawnPlayers(bool canJump)
     {
-        if (!ShouldSpawnPlayers) return;
+        if (TestingPlayer) return;
 
         for (int i = 0; i < PlayerSpawnPosition_TRSFMs.Count; i++)
         {
-            Player player = Instantiate(Player_PRFB, PlayerSpawnPosition_TRSFMs[i].position, Quaternion.identity, transform);
+            Player player = Instantiate(Player_PRFB, PlayerSpawnPosition_TRSFMs[i].position, Quaternion.identity);
             player.StartPlayer(canJump, i);
             ActivePlayers.Add(player);
         }

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 712232875511485424}
   - component: {fileID: 4139879524378635184}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 891271919228560182}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player Spawn Position (1)
   m_TagString: Spawn Position
   m_Icon: {fileID: 0}
@@ -89,7 +89,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1872517581843046837}
   - component: {fileID: 5262772199724141176}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HazardManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -134,7 +134,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7987110059570882016}
   - component: {fileID: 3255869581789678136}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PlayerManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,7 +170,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerManager
   Player_PRFB: {fileID: 6608655026131374792, guid: 186ffcbde9a3a5c4793f7e079d0e1518, type: 3}
-  PlayerSpawnPosition_TRSFMs:
-  - {fileID: 891271919228560182}
   ActivePlayers: []
-  ShouldSpawnPlayers: 1
+  TestingPlayer: {fileID: 0}
