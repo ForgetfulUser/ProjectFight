@@ -35,8 +35,7 @@ public class DisappearingFloorHazard : BaseHazard
     public Color normalColor = Color.white;
     public Color warningColor = Color.red;
 
-    private Renderer visualRenderer;
-    private Collider tileCollider;
+    [SerializeField] Transform visualRender_TRSFM;
 
     private float timer;
     private HazardState state;
@@ -44,9 +43,6 @@ public class DisappearingFloorHazard : BaseHazard
     public override void StartHazard(HazardManager hazardManager)
     {
         base.StartHazard(hazardManager);
-
-        visualRenderer = GetComponentInChildren<Renderer>();
-        tileCollider = GetComponent<Collider>();
 
         RestoreTile();
 
@@ -196,34 +192,29 @@ public class DisappearingFloorHazard : BaseHazard
 
     private void SetTileVisible(bool visible)
     {
-        if (visualRenderer != null)
+        if (visualRender_TRSFM)
         {
-            visualRenderer.enabled = visible;
-        }
-
-        if (tileCollider != null)
-        {
-            tileCollider.enabled = visible;
+            visualRender_TRSFM.gameObject.SetActive(visible);
         }
     }
 
     private void SetTileColor(Color color)
     {
-        if (visualRenderer != null)
+        if (visualRender_TRSFM != null)
         {
-            visualRenderer.material.color = color;
+            visualRender_TRSFM.GetComponent<Renderer>().material.color = color;
         }
     }
 
     private void FlashWarning()
     {
-        if (visualRenderer == null)
+        if (visualRender_TRSFM == null)
         {
             return;
         }
 
         float flash = Mathf.PingPong(Time.time * 6f, 1f);
-        visualRenderer.material.color = Color.Lerp(normalColor, warningColor, flash);
+        visualRender_TRSFM.GetComponent<Renderer>().material.color = Color.Lerp(normalColor, warningColor, flash);
     }
 
     private void OnDrawGizmosSelected()

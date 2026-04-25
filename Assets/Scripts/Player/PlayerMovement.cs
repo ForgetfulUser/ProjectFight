@@ -81,13 +81,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void GroundCheck()
     {
+        Debug.Log("Ground Check Start");
         foreach (var hit in Physics.OverlapBox(groundCheckPos.position,groundCheckSize))
         {
-            if(hit.gameObject.layer == groundLayer)
+            Debug.Log("Overlap Check");
+            if (hit.gameObject.layer == groundLayer)
             {
+                Debug.Log("Grounded");
                 jumpsRemaining = maxJumps;
             }
         }
+        Debug.Log("Ground Check End");
     }
 
     private void OnDrawGizmosSelected()

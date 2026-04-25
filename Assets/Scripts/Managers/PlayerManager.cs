@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     public Player Player_PRFB;
-    private List<Transform> PlayerSpawnPosition_TRSFMs = new List<Transform>();
+    private List<Vector3> PlayerSpawnPosition = new List<Vector3>();
     public List<Player> ActivePlayers = new List<Player>();
 
     [Header("Play Test Variables")]
@@ -16,7 +16,8 @@ public class PlayerManager : MonoBehaviour
         foreach(var spawnPos in GetComponentsInChildren<Transform>())
         {
             if (spawnPos == transform) continue;
-            PlayerSpawnPosition_TRSFMs.Add(spawnPos);
+            PlayerSpawnPosition.Add(spawnPos.position);
+            Destroy(spawnPos.gameObject);
         }
         SpawnPlayers(canJump);
         Player_PRFB.StartPlayer(canJump, 0);
@@ -42,9 +43,9 @@ public class PlayerManager : MonoBehaviour
     {
         if (TestingPlayer) return;
 
-        for (int i = 0; i < PlayerSpawnPosition_TRSFMs.Count; i++)
+        for (int i = 0; i < PlayerSpawnPosition.Count; i++)
         {
-            Player player = Instantiate(Player_PRFB, PlayerSpawnPosition_TRSFMs[i].position, Quaternion.identity);
+            Player player = Instantiate(Player_PRFB, PlayerSpawnPosition[i], Quaternion.identity);
             player.StartPlayer(canJump, i);
             ActivePlayers.Add(player);
         }
@@ -52,6 +53,6 @@ public class PlayerManager : MonoBehaviour
 
     public void RespawnPlayer(Player player)
     {
-        player.transform.position = PlayerSpawnPosition_TRSFMs[player.PlayerIndex].position;
+        player.transform.position = PlayerSpawnPosition[player.PlayerIndex];
     }
 }

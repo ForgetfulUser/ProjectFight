@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 7587992384834621376}
   - component: {fileID: 6608655026131374792}
   - component: {fileID: 7914208197252688345}
-  - component: {fileID: 470577507641257166}
+  - component: {fileID: 5857393874514993325}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -152,7 +152,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
@@ -294,7 +294,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8074889265827031309}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c18747d41358bc548951e5b8ad36ae6e, type: 3}
   m_Name: 
@@ -303,8 +303,9 @@ MonoBehaviour:
   moveSpeed: 20
   jumpPower: 10
   maxJumps: 2
+  CharacterController: {fileID: 5857393874514993325}
   groundCheckPos: {fileID: 1474889821121465036}
-  groundCheckSize: {x: 0.78, y: 0.06}
+  groundCheckSize: {x: 0.8, y: 0.2}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -350,7 +351,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2, y: 2, z: 0.75}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!143 &470577507641257166
+--- !u!143 &5857393874514993325
 CharacterController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -363,7 +364,7 @@ CharacterController:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_LayerOverridePriority: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
@@ -400,7 +401,7 @@ Transform:
   m_GameObject: {fileID: 9054126846395472459}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.06, z: 0}
+  m_LocalPosition: {x: 0, y: -1.158, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

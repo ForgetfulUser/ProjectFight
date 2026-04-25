@@ -169,3 +169,4 @@ MonoBehaviour:
   pressureCheckHalfSize: {x: 2.5, y: 0.3, z: 2.5}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
   warningColor: {r: 1, g: 0, b: 0, a: 1}
+  visualRender_TRSFM: {fileID: 8737984222351281367}
