@@ -2,103 +2,233 @@ using UnityEngine;
 
 public class DisappearingFloorHazard : BaseHazard
 {
+    public enum TriggerMode
+    {
+        Timer,
+        Pressure
+    }
+
+    private enum HazardState
+    {
+        Active,
+        WaitingForPressure,
+        PressureDelay,
+        Warning,
+        Hidden
+    }
+
+    [Header("Mode")]
+    public TriggerMode triggerMode = TriggerMode.Timer;
+
     [Header("Timing")]
     public float activeTime = 3f;
+    public float pressureDelayTime = 0.5f;
     public float warningTime = 1f;
     public float hiddenTime = 2f;
+
+    [Header("Pressure Check")]
+    public LayerMask pressureLayer;
+    public Vector3 pressureCheckOffset = new Vector3(0f, 0.4f, 0f);
+    public Vector3 pressureCheckHalfSize = new Vector3(1f, 0.3f, 1f);
 
     [Header("Visual")]
     public Color normalColor = Color.white;
     public Color warningColor = Color.red;
 
-    private Renderer rend;
-    private Collider col;
+    private Renderer visualRenderer;
+    private Collider tileCollider;
 
     private float timer;
-    private int state;
-
-    // state 0 = active
-    // state 1 = warning
-    // state 2 = hidden
+    private HazardState state;
 
     public override void StartHazard(HazardManager hazardManager)
     {
         base.StartHazard(hazardManager);
 
-        rend = GetComponent<Renderer>();
-        col = GetComponent<Collider>();
+        visualRenderer = GetComponentInChildren<Renderer>();
+        tileCollider = GetComponent<Collider>();
 
-        timer = activeTime;
-        state = 0;
+        RestoreTile();
 
-        SetTileVisible(true);
-        SetTileColor(normalColor);
+        if (triggerMode == TriggerMode.Timer)
+        {
+            state = HazardState.Active;
+            timer = activeTime;
+        }
+        else
+        {
+            state = HazardState.WaitingForPressure;
+            timer = 0f;
+        }
     }
 
     public override void UpdateHazard()
     {
-        timer -= Time.deltaTime;
-
-        if (state == 0)
+        if (triggerMode == TriggerMode.Timer)
         {
-            if (timer <= 0)
+            UpdateTimerMode();
+        }
+        else
+        {
+            UpdatePressureMode();
+        }
+    }
+
+    private void UpdateTimerMode()
+    {
+        if (state == HazardState.Active)
+        {
+            timer -= Time.deltaTime;
+
+            if (timer <= 0f)
             {
-                state = 1;
-                timer = warningTime;
+                StartWarning();
             }
         }
-        else if (state == 1)
+        else if (state == HazardState.Warning)
         {
+            timer -= Time.deltaTime;
             FlashWarning();
 
-            if (timer <= 0)
+            if (timer <= 0f)
             {
-                state = 2;
-                timer = hiddenTime;
-                SetTileVisible(false);
+                HideTile();
             }
         }
-        else if (state == 2)
+        else if (state == HazardState.Hidden)
         {
-            if (timer <= 0)
+            timer -= Time.deltaTime;
+
+            if (timer <= 0f)
             {
-                state = 0;
+                RestoreTile();
+
+                state = HazardState.Active;
                 timer = activeTime;
-                SetTileVisible(true);
-                SetTileColor(normalColor);
             }
         }
     }
 
+    private void UpdatePressureMode()
+    {
+        if (state == HazardState.WaitingForPressure)
+        {
+            SetTileColor(normalColor);
+
+            if (IsPressureDetected())
+            {
+                StartPressureDelay();
+            }
+        }
+        else if (state == HazardState.PressureDelay)
+        {
+            timer -= Time.deltaTime;
+
+            if (timer <= 0f)
+            {
+                StartWarning();
+            }
+        }
+        else if (state == HazardState.Warning)
+        {
+            timer -= Time.deltaTime;
+            FlashWarning();
+
+            if (timer <= 0f)
+            {
+                HideTile();
+            }
+        }
+        else if (state == HazardState.Hidden)
+        {
+            timer -= Time.deltaTime;
+
+            if (timer <= 0f)
+            {
+                RestoreTile();
+
+                state = HazardState.WaitingForPressure;
+                timer = 0f;
+            }
+        }
+    }
+
+    private void StartPressureDelay()
+    {
+        state = HazardState.PressureDelay;
+        timer = pressureDelayTime;
+        SetTileColor(normalColor);
+    }
+
+    private void StartWarning()
+    {
+        state = HazardState.Warning;
+        timer = warningTime;
+    }
+
+    private void HideTile()
+    {
+        state = HazardState.Hidden;
+        timer = hiddenTime;
+
+        SetTileVisible(false);
+    }
+
+    private void RestoreTile()
+    {
+        SetTileVisible(true);
+        SetTileColor(normalColor);
+    }
+
+    private bool IsPressureDetected()
+    {
+        Vector3 checkCenter = transform.position + pressureCheckOffset;
+
+        Collider[] hits = Physics.OverlapBox(
+            checkCenter,
+            pressureCheckHalfSize,
+            Quaternion.identity,
+            pressureLayer
+        );
+
+        return hits.Length > 0;
+    }
+
     private void SetTileVisible(bool visible)
     {
-        if (rend != null)
+        if (visualRenderer != null)
         {
-            rend.enabled = visible;
+            visualRenderer.enabled = visible;
         }
 
-        if (col != null)
+        if (tileCollider != null)
         {
-            col.enabled = visible;
+            tileCollider.enabled = visible;
         }
     }
 
     private void SetTileColor(Color color)
     {
-        if (rend != null)
+        if (visualRenderer != null)
         {
-            rend.material.color = color;
+            visualRenderer.material.color = color;
         }
     }
 
     private void FlashWarning()
     {
-        if (rend == null)
+        if (visualRenderer == null)
         {
             return;
         }
 
         float flash = Mathf.PingPong(Time.time * 6f, 1f);
-        rend.material.color = Color.Lerp(normalColor, warningColor, flash);
+        visualRenderer.material.color = Color.Lerp(normalColor, warningColor, flash);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(transform.position + pressureCheckOffset, pressureCheckHalfSize * 2f);
     }
 }

@@ -125,8 +125,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6bbb8850f38187498f0eba94f2a17ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DisappearingFloorHazard
+  triggerMode: 0
   activeTime: 3
   warningTime: 1
   hiddenTime: 2
+  pressureLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  pressureCheckOffset: {x: 0, y: 0.4, z: 0}
+  pressureCheckHalfSize: {x: 1, y: 0.3, z: 1}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
   warningColor: {r: 1, g: 0, b: 0, a: 1}
