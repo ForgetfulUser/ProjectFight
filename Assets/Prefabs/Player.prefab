@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3763697859623216546}
   - component: {fileID: 1423162640616817176}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 6608655026131374792}
   - component: {fileID: 7914208197252688345}
   - component: {fileID: 470577507641257166}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -384,7 +384,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1474889821121465036}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ground Check Pos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
