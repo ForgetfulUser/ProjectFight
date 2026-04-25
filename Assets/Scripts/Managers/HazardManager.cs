@@ -8,9 +8,11 @@ public class HazardManager : MonoBehaviour
 
     public void WakeUpManager()
     {
-        foreach(var type in FindObjectsByType(typeof(BaseHazard), FindObjectsSortMode.None))
+        Hazards.Clear();
+
+        foreach (var hazard in FindObjectsByType<BaseHazard>(FindObjectsSortMode.None))
         {
-            Hazards.Add(type.GetComponent<BaseHazard>());
+            Hazards.Add(hazard);
         }
     }
 
