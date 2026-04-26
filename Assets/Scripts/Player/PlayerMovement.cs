@@ -20,10 +20,8 @@ public class PlayerMovement : MonoBehaviour
     public Transform groundCheckPos;
     public Vector3 groundCheckSize = new Vector2(0.5f, 0.5f);
 
-    [Header("Gravity")]
-    public float baseGravity = 1;
+    [Header("Fall Speed")]
     public float maxFallSpeed = 18;
-    public float fallSpeedMulitiplier = 2;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void StartMovement(bool canJump)
@@ -44,12 +42,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (rb.linearVelocity.y < 0)
         {
-            //rb.useGravity = baseGravity * fallSpeedMulitiplier; // Fall increasingly faster
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Max(rb.linearVelocity.y, -maxFallSpeed)); // Cap Player at Max Fallspeed
-        }
-        else
-        {
-            //rb.gravityScale = baseGravity;
         }
     }
 

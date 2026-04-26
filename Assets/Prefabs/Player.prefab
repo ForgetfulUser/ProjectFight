@@ -100,10 +100,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 629388996299712908}
+  - component: {fileID: 6608655026131374792}
+  - component: {fileID: 7587992384834621376}
   - component: {fileID: 1392176331117373401}
   - component: {fileID: 2913404083196610203}
-  - component: {fileID: 7587992384834621376}
-  - component: {fileID: 6608655026131374792}
   - component: {fileID: 7914208197252688345}
   - component: {fileID: 5857393874514993325}
   m_Layer: 7
@@ -130,6 +130,48 @@ Transform:
   - {fileID: 3763697859623216546}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6608655026131374792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8074889265827031309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b241cdacda09e54db2117bfe5b40f5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player
+  PlayerMovement: {fileID: 7587992384834621376}
+  PlayerIndex: -1
+  CurrentHealth: 10
+  MaxHealth: 10
+  CurrentStamina: 0
+  MaxStamina: 0
+--- !u!114 &7587992384834621376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8074889265827031309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18747d41358bc548951e5b8ad36ae6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  rb: {fileID: 1392176331117373401}
+  moveSpeed: 20
+  jumpPower: 10
+  maxJumps: 2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  groundCheckPos: {fileID: 1474889821121465036}
+  groundCheckSize: {x: 0.8, y: 0.2, z: 0}
+  baseGravity: 1
+  maxFallSpeed: 18
+  fallSpeedMulitiplier: 2
 --- !u!54 &1392176331117373401
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -287,48 +329,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &7587992384834621376
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8074889265827031309}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18747d41358bc548951e5b8ad36ae6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  rb: {fileID: 1392176331117373401}
-  moveSpeed: 20
-  jumpPower: 10
-  maxJumps: 2
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  groundCheckPos: {fileID: 1474889821121465036}
-  groundCheckSize: {x: 0.8, y: 0.2, z: 0}
-  baseGravity: 1
-  maxFallSpeed: 18
-  fallSpeedMulitiplier: 2
---- !u!114 &6608655026131374792
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8074889265827031309}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b241cdacda09e54db2117bfe5b40f5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Player
-  PlayerMovement: {fileID: 7587992384834621376}
-  PlayerIndex: -1
-  CurrentHealth: 10
-  MaxHealth: 10
-  CurrentStamina: 0
-  MaxStamina: 0
 --- !u!65 &7914208197252688345
 BoxCollider:
   m_ObjectHideFlags: 0
