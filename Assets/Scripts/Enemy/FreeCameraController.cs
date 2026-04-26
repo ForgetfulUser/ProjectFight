@@ -8,11 +8,15 @@ public class FreeCameraController : MonoBehaviour
     public bool invertY = false;
 
     [Header("Movement")]
+    public bool moveOnlyWhileLooking = true;
     public float moveSpeed = 8f;
     public float fastMoveMultiplier = 3f;
     public float scrollSpeedStep = 2f;
     public float minMoveSpeed = 1f;
     public float maxMoveSpeed = 50f;
+
+    [Header("Cursor")]
+    public bool lockCursorWhileLooking = true;
 
     private float yaw;
     private float pitch;
@@ -21,8 +25,16 @@ public class FreeCameraController : MonoBehaviour
     private void Start()
     {
         Vector3 angles = transform.eulerAngles;
-        yaw = angles.y;
-        pitch = angles.x;
+
+        yaw = NormalizeAngle(angles.y);
+        pitch = NormalizeAngle(angles.x);
+
+        pitch = Mathf.Clamp(pitch, -89f, 89f);
+    }
+
+    private void OnDisable()
+    {
+        UnlockCursor();
     }
 
     private void Update()
@@ -43,15 +55,23 @@ public class FreeCameraController : MonoBehaviour
         if (Mouse.current.rightButton.wasPressedThisFrame)
         {
             isLooking = true;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+
+            Vector3 angles = transform.eulerAngles;
+            yaw = NormalizeAngle(angles.y);
+            pitch = NormalizeAngle(angles.x);
+            pitch = Mathf.Clamp(pitch, -89f, 89f);
+
+            if (lockCursorWhileLooking)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
         }
 
         if (Mouse.current.rightButton.wasReleasedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             isLooking = false;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            UnlockCursor();
         }
     }
 
@@ -82,6 +102,11 @@ public class FreeCameraController : MonoBehaviour
 
     private void HandleMovement()
     {
+        if (moveOnlyWhileLooking && !isLooking)
+        {
+            return;
+        }
+
         Vector3 moveDir = Vector3.zero;
 
         if (Keyboard.current.wKey.isPressed)
@@ -131,6 +156,11 @@ public class FreeCameraController : MonoBehaviour
 
     private void HandleSpeedScroll()
     {
+        if (moveOnlyWhileLooking && !isLooking)
+        {
+            return;
+        }
+
         Vector2 scroll = Mouse.current.scroll.ReadValue();
 
         if (Mathf.Abs(scroll.y) <= 0.01f)
@@ -140,5 +170,29 @@ public class FreeCameraController : MonoBehaviour
 
         moveSpeed += Mathf.Sign(scroll.y) * scrollSpeedStep;
         moveSpeed = Mathf.Clamp(moveSpeed, minMoveSpeed, maxMoveSpeed);
+    }
+
+    private float NormalizeAngle(float angle)
+    {
+        while (angle > 180f)
+        {
+            angle -= 360f;
+        }
+
+        while (angle < -180f)
+        {
+            angle += 360f;
+        }
+
+        return angle;
+    }
+
+    private void UnlockCursor()
+    {
+        if (lockCursorWhileLooking)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 }
