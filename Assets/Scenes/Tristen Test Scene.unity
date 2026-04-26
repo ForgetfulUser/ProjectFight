@@ -775,6 +775,10 @@ PrefabInstance:
       propertyPath: jumpPower
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 7914208197252688345, guid: 186ffcbde9a3a5c4793f7e079d0e1518, type: 3}
+      propertyPath: m_Size.z
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8074889265827031309, guid: 186ffcbde9a3a5c4793f7e079d0e1518, type: 3}
       propertyPath: m_Name
       value: Player
