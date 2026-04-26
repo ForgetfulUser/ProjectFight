@@ -16,9 +16,9 @@ public class PlayerMovement : MonoBehaviour
     int jumpsRemaining;
 
     [Header("Ground Check")]
-    public Transform groundCheckPos;
-    public Vector2 groundCheckSize = new Vector2(0.5f, 0.5f);
     public LayerMask groundLayer;
+    public Transform groundCheckPos;
+    public Vector3 groundCheckSize = new Vector2(0.5f, 0.5f);
 
     [Header("Gravity")]
     public float baseGravity = 1;
@@ -60,20 +60,18 @@ public class PlayerMovement : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
-        Debug.Log("Jumps remaining " + jumpsRemaining);
         if (jumpsRemaining > 0 && canJump)
         {
             if (context.performed)
             {
                 // Hold jump for full height
-                Debug.Log("Jump");
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpPower, rb.linearVelocity.z);
                 jumpsRemaining--;
             }
             else if (context.canceled)
             {
                 // Release jump early for half height
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f, rb.linearVelocity.z);
                 jumpsRemaining--;
             }
         }
@@ -81,17 +79,18 @@ public class PlayerMovement : MonoBehaviour
 
     private void GroundCheck()
     {
-        Debug.Log("Ground Check Start");
-        foreach (var hit in Physics.OverlapBox(groundCheckPos.position,groundCheckSize))
+
+        Collider[] hits = Physics.OverlapBox(
+            groundCheckPos.position,
+            groundCheckSize,
+            Quaternion.identity,
+            groundLayer
+        );
+
+        if (hits.Length > 0)
         {
-            Debug.Log("Overlap Check");
-            if (hit.gameObject.layer == groundLayer)
-            {
-                Debug.Log("Grounded");
-                jumpsRemaining = maxJumps;
-            }
+            jumpsRemaining = maxJumps;
         }
-        Debug.Log("Ground Check End");
     }
 
     private void OnDrawGizmosSelected()
