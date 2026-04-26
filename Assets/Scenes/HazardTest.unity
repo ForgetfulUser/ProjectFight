@@ -211,6 +211,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   PlayerManager: {fileID: 648392574}
   HazardManager: {fileID: 1026176755}
+  enableDebugReset: 1
 --- !u!4 &627126753
 Transform:
   m_ObjectHideFlags: 0
@@ -833,7 +834,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce734e0cb038d254ca1b901194a7d95e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Whipper
-  rotatingPart: {fileID: 814107993}
+  rotatingPart_TRSFM: {fileID: 814107993}
   localRotationAxis: {x: 0, y: 1, z: 0}
   rotationSpeed: 180
   playerLayer:
@@ -844,6 +845,7 @@ MonoBehaviour:
   upwardForce: 0
   maxHorizontalSpeed: 18
   invertPushDirection: 0
+  resetWholeObjectTransform: 0
 --- !u!1001 &1546875833
 PrefabInstance:
   m_ObjectHideFlags: 0
