@@ -9,7 +9,7 @@ public class WhipperCollider : MonoBehaviour
         this.whipper = whipper;
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (whipper != null)
         {
@@ -17,7 +17,7 @@ public class WhipperCollider : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (whipper != null)
         {

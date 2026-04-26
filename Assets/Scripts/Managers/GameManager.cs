@@ -1,27 +1,35 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
     public PlayerManager PlayerManager;
     public HazardManager HazardManager;
 
+    [Header("Debug")]
+    public bool enableDebugReset = true;
+
     protected virtual void Awake()
     {
         HazardManager.WakeUpManager();
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     protected virtual void Start()
     {
         PlayerManager.StartManager(true);
         HazardManager.StartManager();
     }
 
-    // Update is called once per frame
     protected virtual void Update()
     {
         PlayerManager.UpdateManager();
         HazardManager.UpdateManager();
+
+        if (enableDebugReset && Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame)
+        {
+            HazardManager.ResetHazards();
+            Debug.Log("Hazards reset.");
+        }
     }
 
     protected virtual void LateUpdate()

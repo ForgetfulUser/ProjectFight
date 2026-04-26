@@ -3,7 +3,7 @@ using UnityEngine;
 public class Whipper : BaseHazard
 {
     [Header("Rotating Part")]
-    public Transform rotatingPart;
+    [SerializeField] private Transform rotatingPart_TRSFM;
 
     [Header("Rotation")]
     public Vector3 localRotationAxis = Vector3.up;
@@ -19,12 +19,26 @@ public class Whipper : BaseHazard
     public float maxHorizontalSpeed = 12f;
     public bool invertPushDirection = false;
 
+    [Header("Reset")]
+    public bool resetWholeObjectTransform = false;
+
+    private Vector3 startPosition;
+    private Quaternion startRotation;
+    private Vector3 startScale;
+
+    private Vector3 rotatingPartStartLocalPosition;
+    private Quaternion rotatingPartStartLocalRotation;
+    private Vector3 rotatingPartStartLocalScale;
+
     private WhipperCollider whipperCollider;
 
     public override void StartHazard(HazardManager hazardManager)
     {
         base.StartHazard(hazardManager);
+
+        SaveStartTransform();
         SetupWhipper();
+        ResetHazard();
     }
 
     public override void UpdateHazard()
@@ -32,29 +46,56 @@ public class Whipper : BaseHazard
         RotateWhipper();
     }
 
-    private void Awake()
+    public override void ResetHazard()
     {
-        SetupWhipper();
+        if (resetWholeObjectTransform)
+        {
+            transform.position = startPosition;
+            transform.rotation = startRotation;
+            transform.localScale = startScale;
+        }
+
+        if (rotatingPart_TRSFM != null)
+        {
+            rotatingPart_TRSFM.localPosition = rotatingPartStartLocalPosition;
+            rotatingPart_TRSFM.localRotation = rotatingPartStartLocalRotation;
+            rotatingPart_TRSFM.localScale = rotatingPartStartLocalScale;
+            rotatingPart_TRSFM.gameObject.SetActive(true);
+        }
+    }
+
+    private void SaveStartTransform()
+    {
+        startPosition = transform.position;
+        startRotation = transform.rotation;
+        startScale = transform.localScale;
+
+        if (rotatingPart_TRSFM != null)
+        {
+            rotatingPartStartLocalPosition = rotatingPart_TRSFM.localPosition;
+            rotatingPartStartLocalRotation = rotatingPart_TRSFM.localRotation;
+            rotatingPartStartLocalScale = rotatingPart_TRSFM.localScale;
+        }
     }
 
     private void SetupWhipper()
     {
-        if (rotatingPart == null)
+        if (rotatingPart_TRSFM == null)
         {
-            Debug.LogWarning("Whipper needs a rotatingPart assigned.", gameObject);
+            Debug.LogWarning("Whipper needs rotatingPart_TRSFM assigned.", gameObject);
             return;
         }
 
-        whipperCollider = rotatingPart.GetComponent<WhipperCollider>();
+        whipperCollider = rotatingPart_TRSFM.GetComponentInChildren<WhipperCollider>();
 
         if (whipperCollider == null)
         {
-            whipperCollider = rotatingPart.gameObject.AddComponent<WhipperCollider>();
+            whipperCollider = rotatingPart_TRSFM.gameObject.AddComponent<WhipperCollider>();
         }
 
         whipperCollider.SetWhipper(this);
 
-        Collider col = rotatingPart.GetComponent<Collider>();
+        Collider col = whipperCollider.GetComponent<Collider>();
 
         if (col != null)
         {
@@ -62,13 +103,13 @@ public class Whipper : BaseHazard
         }
         else
         {
-            Debug.LogWarning("RotatingPart needs a Collider for Whipper to push the player.", rotatingPart.gameObject);
+            Debug.LogWarning("WhipperCollider object needs a Collider.", whipperCollider.gameObject);
         }
     }
 
     private void RotateWhipper()
     {
-        if (rotatingPart == null)
+        if (rotatingPart_TRSFM == null)
         {
             return;
         }
@@ -80,7 +121,7 @@ public class Whipper : BaseHazard
             axis = Vector3.up;
         }
 
-        rotatingPart.Rotate(axis.normalized * rotationSpeed * Time.deltaTime, Space.Self);
+        rotatingPart_TRSFM.Rotate(axis.normalized * rotationSpeed * Time.deltaTime, Space.Self);
     }
 
     public void TryPush(Collider other)
@@ -102,12 +143,19 @@ public class Whipper : BaseHazard
 
     private void PushPlayer(Rigidbody playerRb)
     {
-        if (rotatingPart == null)
+        if (rotatingPart_TRSFM == null)
         {
             return;
         }
 
-        Vector3 axisWorld = rotatingPart.TransformDirection(localRotationAxis.normalized);
+        Vector3 axis = localRotationAxis;
+
+        if (axis.sqrMagnitude < 0.001f)
+        {
+            axis = Vector3.up;
+        }
+
+        Vector3 axisWorld = rotatingPart_TRSFM.TransformDirection(axis.normalized);
 
         if (axisWorld.sqrMagnitude < 0.001f)
         {
@@ -116,13 +164,12 @@ public class Whipper : BaseHazard
 
         axisWorld.Normalize();
 
-        Vector3 fromCenter = playerRb.worldCenterOfMass - rotatingPart.position;
-
+        Vector3 fromCenter = playerRb.worldCenterOfMass - rotatingPart_TRSFM.position;
         Vector3 radialDirection = fromCenter - Vector3.Project(fromCenter, axisWorld);
 
         if (radialDirection.sqrMagnitude < 0.001f)
         {
-            radialDirection = rotatingPart.right;
+            radialDirection = rotatingPart_TRSFM.right;
         }
 
         radialDirection.Normalize();

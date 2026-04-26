@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SimpleEnemyAI : MonoBehaviour
+public class SimpleEnemyAI : BaseHazard
 {
     private enum EnemyState
     {
@@ -16,71 +16,118 @@ public class SimpleEnemyAI : MonoBehaviour
     [Header("Movement")]
     public float moveSpeed = 4f;
     public float detectionRange = 12f;
-    public float stopDistance = 1.5f;
-
-    [Header("Attack")]
     public float attackRange = 1.8f;
-    public float attackCooldown = 1f;
-    public float knockbackForce = 8f;
-    public float upwardForce = 1.5f;
-
-    [Header("Ground Movement")]
     public bool lockYMovement = true;
 
+    [Header("Attack")]
+    public float attackCooldown = 1f;
+    public float pushForce = 8f;
+    public float upwardForce = 1.5f;
+
+    [Header("Reset")]
+    public bool resetToStartPosition = true;
+
     private Rigidbody rb;
-    private EnemyState state;
+    private EnemyState currentState;
+
+    private Vector3 startPosition;
+    private Quaternion startRotation;
+
     private float lastAttackTime = -999f;
 
-    private void Awake()
+    public override void StartHazard(HazardManager hazardManager)
     {
+        base.StartHazard(hazardManager);
+
         rb = GetComponent<Rigidbody>();
-        state = EnemyState.Idle;
+
+        startPosition = transform.position;
+        startRotation = transform.rotation;
+
+        FindTarget();
+
+        ResetHazard();
     }
 
-    private void Start()
+    public override void UpdateHazard()
     {
         if (target == null)
         {
-            GameObject playerObject = GameObject.FindGameObjectWithTag(playerTag);
+            FindTarget();
 
-            if (playerObject != null)
+            if (target == null)
             {
-                target = playerObject.transform;
+                StopMoving();
+                return;
             }
+        }
+
+        UpdateState();
+        UpdateBehavior();
+    }
+
+    public override void ResetHazard()
+    {
+        currentState = EnemyState.Idle;
+        lastAttackTime = -999f;
+
+        if (resetToStartPosition)
+        {
+            transform.position = startPosition;
+            transform.rotation = startRotation;
+        }
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
     }
 
-    private void FixedUpdate()
+    private void FindTarget()
     {
-        if (target == null || rb == null)
+        if (target != null)
         {
             return;
         }
 
+        GameObject playerObject = GameObject.FindGameObjectWithTag(playerTag);
+
+        if (playerObject != null)
+        {
+            target = playerObject.transform;
+        }
+    }
+
+    private void UpdateState()
+    {
         float distanceToTarget = Vector3.Distance(transform.position, target.position);
 
         if (distanceToTarget <= attackRange)
         {
-            state = EnemyState.Attacking;
+            currentState = EnemyState.Attacking;
         }
         else if (distanceToTarget <= detectionRange)
         {
-            state = EnemyState.Chasing;
+            currentState = EnemyState.Chasing;
         }
         else
         {
-            state = EnemyState.Idle;
+            currentState = EnemyState.Idle;
         }
+    }
 
-        if (state == EnemyState.Idle)
+    private void UpdateBehavior()
+    {
+        if (currentState == EnemyState.Idle)
         {
             StopMoving();
         }
-        else if (state == EnemyState.Chasing)
+        else if (currentState == EnemyState.Chasing)
         {
             ChaseTarget();
         }
-        else if (state == EnemyState.Attacking)
+        else if (currentState == EnemyState.Attacking)
         {
             StopMoving();
             TryAttack();
@@ -89,6 +136,11 @@ public class SimpleEnemyAI : MonoBehaviour
 
     private void ChaseTarget()
     {
+        if (rb == null)
+        {
+            return;
+        }
+
         Vector3 direction = target.position - transform.position;
 
         if (lockYMovement)
@@ -117,6 +169,11 @@ public class SimpleEnemyAI : MonoBehaviour
 
     private void StopMoving()
     {
+        if (rb == null)
+        {
+            return;
+        }
+
         rb.linearVelocity = new Vector3(
             0f,
             rb.linearVelocity.y,
@@ -149,7 +206,7 @@ public class SimpleEnemyAI : MonoBehaviour
 
             direction.Normalize();
 
-            Vector3 force = direction * knockbackForce;
+            Vector3 force = direction * pushForce;
             force += Vector3.up * upwardForce;
 
             targetRb.AddForce(force, ForceMode.Impulse);

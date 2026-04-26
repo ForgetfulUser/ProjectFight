@@ -37,6 +37,7 @@ public class DisappearingFloorHazard : BaseHazard
 
     [SerializeField] Transform visualRender_TRSFM;
 
+    private Renderer visualRenderer;
     private float timer;
     private HazardState state;
 
@@ -44,18 +45,12 @@ public class DisappearingFloorHazard : BaseHazard
     {
         base.StartHazard(hazardManager);
 
-        RestoreTile();
+        if (visualRender_TRSFM != null)
+        {
+            visualRenderer = visualRender_TRSFM.GetComponent<Renderer>();
+        }
 
-        if (triggerMode == TriggerMode.Timer)
-        {
-            state = HazardState.Active;
-            timer = activeTime;
-        }
-        else
-        {
-            state = HazardState.WaitingForPressure;
-            timer = 0f;
-        }
+        ResetHazard();
     }
 
     public override void UpdateHazard()
@@ -67,6 +62,22 @@ public class DisappearingFloorHazard : BaseHazard
         else
         {
             UpdatePressureMode();
+        }
+    }
+
+    public override void ResetHazard()
+    {
+        RestoreTile();
+
+        if (triggerMode == TriggerMode.Timer)
+        {
+            state = HazardState.Active;
+            timer = activeTime;
+        }
+        else
+        {
+            state = HazardState.WaitingForPressure;
+            timer = 0f;
         }
     }
 
@@ -97,10 +108,7 @@ public class DisappearingFloorHazard : BaseHazard
 
             if (timer <= 0f)
             {
-                RestoreTile();
-
-                state = HazardState.Active;
-                timer = activeTime;
+                ResetHazard();
             }
         }
     }
@@ -141,10 +149,7 @@ public class DisappearingFloorHazard : BaseHazard
 
             if (timer <= 0f)
             {
-                RestoreTile();
-
-                state = HazardState.WaitingForPressure;
-                timer = 0f;
+                ResetHazard();
             }
         }
     }
@@ -192,7 +197,7 @@ public class DisappearingFloorHazard : BaseHazard
 
     private void SetTileVisible(bool visible)
     {
-        if (visualRender_TRSFM)
+        if (visualRender_TRSFM != null)
         {
             visualRender_TRSFM.gameObject.SetActive(visible);
         }
@@ -200,21 +205,21 @@ public class DisappearingFloorHazard : BaseHazard
 
     private void SetTileColor(Color color)
     {
-        if (visualRender_TRSFM != null)
+        if (visualRenderer != null)
         {
-            visualRender_TRSFM.GetComponent<Renderer>().material.color = color;
+            visualRenderer.material.color = color;
         }
     }
 
     private void FlashWarning()
     {
-        if (visualRender_TRSFM == null)
+        if (visualRenderer == null)
         {
             return;
         }
 
         float flash = Mathf.PingPong(Time.time * 6f, 1f);
-        visualRender_TRSFM.GetComponent<Renderer>().material.color = Color.Lerp(normalColor, warningColor, flash);
+        visualRenderer.material.color = Color.Lerp(normalColor, warningColor, flash);
     }
 
     private void OnDrawGizmosSelected()
