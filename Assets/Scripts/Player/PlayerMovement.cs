@@ -1,5 +1,6 @@
 using UnityEditor.Purchasing;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
@@ -7,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody rb;
     [Header("Move")]
     public float moveSpeed = 20;
-    private Vector2 moveDir;
+    [HideInInspector] public Vector2 moveDir;
 
     [Header("Jump")]
     private bool canJump;
@@ -31,9 +32,10 @@ public class PlayerMovement : MonoBehaviour
         jumpsRemaining = maxJumps;
     }
 
-    public void UpdateMovement()
+    public void UpdateMovement(out Vector2 moveDir)
     {
         GroundCheck();
+        moveDir = this.moveDir;
     }
 
     public void UpdateFixedMovement()

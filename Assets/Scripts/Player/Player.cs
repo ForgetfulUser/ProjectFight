@@ -4,12 +4,18 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public PlayerMovement PlayerMovement;
+    public PlayerAnimationController PlayerAnimationController;
     public int PlayerIndex = -1;
     [Header("Stats")]
     public int CurrentHealth;
     public int MaxHealth;
     public int CurrentStamina;
     public int MaxStamina;
+
+    public void InitializePlayer(int playerIndex)
+    {
+
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void StartPlayer(bool canJump, int playerIndex)
@@ -21,7 +27,8 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     public void UpdatePlayer()
     {
-        PlayerMovement.UpdateMovement();
+        PlayerMovement.UpdateMovement(out Vector2 moveDir);
+        PlayerAnimationController.UpdateAnimation(moveDir);
     }
 
     public void FixedUpdatePlayer()

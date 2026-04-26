@@ -125,6 +125,7 @@ GameObject:
   - component: {fileID: 629388996299712908}
   - component: {fileID: 6608655026131374792}
   - component: {fileID: 7587992384834621376}
+  - component: {fileID: 2627637259430525071}
   - component: {fileID: 1392176331117373401}
   - component: {fileID: 7914208197252688345}
   - component: {fileID: 2913404083196610203}
@@ -165,6 +166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   PlayerMovement: {fileID: 7587992384834621376}
+  PlayerAnimationController: {fileID: 2627637259430525071}
   PlayerIndex: 0
   CurrentHealth: 10
   MaxHealth: 10
@@ -184,6 +186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   rb: {fileID: 1392176331117373401}
   moveSpeed: 10
+  moveDir: {x: 0, y: 0}
   jumpPower: 10
   maxJumps: 2
   groundLayer:
@@ -192,6 +195,19 @@ MonoBehaviour:
   groundCheckPos: {fileID: 1474889821121465036}
   groundCheckSize: {x: 0.8, y: 0.2, z: 0.2}
   maxFallSpeed: 18
+--- !u!114 &2627637259430525071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8074889265827031309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54601cfc23771bf49a45763ce003e2d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationController
+  Animator: {fileID: 8692551883824260078}
 --- !u!54 &1392176331117373401
 Rigidbody:
   m_ObjectHideFlags: 0

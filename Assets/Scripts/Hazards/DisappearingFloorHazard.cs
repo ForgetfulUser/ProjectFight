@@ -34,6 +34,7 @@ public class DisappearingFloorHazard : BaseHazard
     [Header("Visual")]
     public Color normalColor = Color.white;
     public Color warningColor = Color.red;
+    public Material lavaMaterial;
 
     [SerializeField] Transform visualRender_TRSFM;
 
@@ -48,6 +49,7 @@ public class DisappearingFloorHazard : BaseHazard
         if (visualRender_TRSFM != null)
         {
             visualRenderer = visualRender_TRSFM.GetComponent<Renderer>();
+            lavaMaterial = visualRenderer.material;
         }
 
         ResetHazard();
@@ -219,7 +221,8 @@ public class DisappearingFloorHazard : BaseHazard
         }
 
         float flash = Mathf.PingPong(Time.time * 6f, 1f);
-        visualRenderer.material.color = Color.Lerp(normalColor, warningColor, flash);
+        lavaMaterial.SetFloat("_Blend", flash);
+        //visualRenderer.material.color = Color.Lerp(normalColor, warningColor, flash);
     }
 
     private void OnDrawGizmosSelected()
