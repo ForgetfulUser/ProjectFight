@@ -63,7 +63,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Blend: 0.18
+    - _Alpha: 1
+    - _Blend: 0.55
     - _Glow: 0.05
     - _QueueControl: 0
     - _QueueOffset: 0
