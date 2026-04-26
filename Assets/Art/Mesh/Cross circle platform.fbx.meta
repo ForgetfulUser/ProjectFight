@@ -8,7 +8,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: PLatform
-    second: {fileID: 2100000, guid: e4d116478018b034a82b2529780c7bb8, type: 2}
+    second: {fileID: 2100000, guid: 8d5c81b22b2559747975200cdd777488, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
