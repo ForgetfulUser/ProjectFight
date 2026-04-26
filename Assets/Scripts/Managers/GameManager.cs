@@ -32,6 +32,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    protected virtual void FixedUpdate()
+    {
+        PlayerManager.FixedUpdateManager();
+    }
+
     protected virtual void LateUpdate()
     {
         //Update UI here if needed

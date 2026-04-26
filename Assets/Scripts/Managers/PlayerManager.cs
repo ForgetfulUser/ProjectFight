@@ -36,7 +36,21 @@ public class PlayerManager : MonoBehaviour
         {
             TestingPlayer.UpdatePlayer();
         }
+    }
 
+    public void FixedUpdateManager()
+    {
+        if (TestingPlayer == null)
+        {
+            foreach (var player in ActivePlayers)
+            {
+                player.FixedUpdatePlayer();
+            }
+        }
+        else
+        {
+            TestingPlayer.FixedUpdatePlayer();
+        }
     }
 
     private void SpawnPlayers(bool canJump)

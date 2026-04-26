@@ -23,4 +23,9 @@ public class Player : MonoBehaviour
     {
         PlayerMovement.UpdateMovement();
     }
+
+    public void FixedUpdatePlayer()
+    {
+        PlayerMovement.UpdateFixedMovement();
+    }
 }

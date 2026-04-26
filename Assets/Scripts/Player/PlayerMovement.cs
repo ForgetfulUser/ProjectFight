@@ -33,17 +33,12 @@ public class PlayerMovement : MonoBehaviour
 
     public void UpdateMovement()
     {
-        rb.linearVelocity = new Vector3(moveDir.x * moveSpeed, rb.linearVelocity.y, moveDir.y * moveSpeed);
         GroundCheck();
-        Gravity();
     }
 
-    private void Gravity()
+    public void UpdateFixedMovement()
     {
-        if (rb.linearVelocity.y < 0)
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Max(rb.linearVelocity.y, -maxFallSpeed)); // Cap Player at Max Fallspeed
-        }
+        rb.linearVelocity = new Vector3(moveDir.x * moveSpeed, rb.linearVelocity.y, moveDir.y * moveSpeed);
     }
 
     public void Move(InputAction.CallbackContext context)
