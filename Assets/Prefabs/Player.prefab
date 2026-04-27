@@ -194,7 +194,7 @@ MonoBehaviour:
     m_Bits: 64
   groundCheckPos: {fileID: 1474889821121465036}
   groundCheckSize: {x: 0.8, y: 0.2, z: 0.2}
-  maxFallSpeed: 18
+  maxFallSpeed: 30
 --- !u!114 &2627637259430525071
 MonoBehaviour:
   m_ObjectHideFlags: 0
