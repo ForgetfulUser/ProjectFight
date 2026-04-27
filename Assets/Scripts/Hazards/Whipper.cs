@@ -1,23 +1,41 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Whipper : BaseHazard
 {
+    private class PushInfo
+    {
+        public Rigidbody rb;
+        public PlayerMovement playerMovement;
+        public Vector3 pushDirection;
+        public float timer;
+        public Coroutine coroutine;
+    }
+
     [Header("Rotating Part")]
     [SerializeField] private Transform rotatingPart_TRSFM;
 
+    [Header("Hitbox")]
+    [SerializeField] private WhipperCollider whipperCollider;
+
     [Header("Rotation")]
     public Vector3 localRotationAxis = Vector3.up;
-    public float rotationSpeed = 180f;
+    public float rotationSpeed = 150f;
 
     [Header("Player Detection")]
     public LayerMask playerLayer;
 
-    [Header("Push")]
-    public float pushForce = 35f;
+    [Header("Sweep Push")]
+    public float pushForce = 55f;
     public float outwardForceRatio = 0.25f;
-    public float upwardForce = 0f;
-    public float maxHorizontalSpeed = 12f;
+    public float maxPushSpeed = 26f;
     public bool invertPushDirection = false;
+
+    [Header("After-Hit Coroutine Push")]
+    public float pushDuration = 0.45f;
+    public bool fadePushOverTime = true;
+    public float stunTime = 0.18f;
 
     [Header("Reset")]
     public bool resetWholeObjectTransform = false;
@@ -30,7 +48,7 @@ public class Whipper : BaseHazard
     private Quaternion rotatingPartStartLocalRotation;
     private Vector3 rotatingPartStartLocalScale;
 
-    private WhipperCollider whipperCollider;
+    private readonly Dictionary<PlayerMovement, PushInfo> activePushes = new Dictionary<PlayerMovement, PushInfo>();
 
     public override void StartHazard(HazardManager hazardManager)
     {
@@ -46,8 +64,16 @@ public class Whipper : BaseHazard
         RotateWhipper();
     }
 
+    public override void FixedUpdateHazard()
+    {
+        // Keep empty for now.
+        // Push is handled through coroutine + PlayerMovement external velocity.
+    }
+
     public override void ResetHazard()
     {
+        StopAllPushCoroutines();
+
         if (resetWholeObjectTransform)
         {
             transform.position = startPosition;
@@ -86,20 +112,24 @@ public class Whipper : BaseHazard
             return;
         }
 
-        whipperCollider = rotatingPart_TRSFM.GetComponentInChildren<WhipperCollider>();
+        if (whipperCollider == null)
+        {
+            whipperCollider = GetComponentInChildren<WhipperCollider>();
+        }
 
         if (whipperCollider == null)
         {
-            whipperCollider = rotatingPart_TRSFM.gameObject.AddComponent<WhipperCollider>();
+            Debug.LogWarning("Whipper needs a WhipperCollider on the hitbox child object.", gameObject);
+            return;
         }
 
         whipperCollider.SetWhipper(this);
 
-        Collider col = whipperCollider.GetComponent<Collider>();
+        Collider hitboxCollider = whipperCollider.GetComponent<Collider>();
 
-        if (col != null)
+        if (hitboxCollider != null)
         {
-            col.isTrigger = true;
+            hitboxCollider.isTrigger = true;
         }
         else
         {
@@ -121,33 +151,139 @@ public class Whipper : BaseHazard
             axis = Vector3.up;
         }
 
-        rotatingPart_TRSFM.Rotate(axis.normalized * rotationSpeed * Time.deltaTime, Space.Self);
+        rotatingPart_TRSFM.Rotate(
+            axis.normalized * rotationSpeed * Time.deltaTime,
+            Space.Self
+        );
     }
 
-    public void TryPush(Collider other)
+    public void RegisterHit(Collider other)
     {
-        if (!IsInLayerMask(other.gameObject.layer, playerLayer))
+        PlayerMovement playerMovement = other.GetComponentInParent<PlayerMovement>();
+
+        if (playerMovement == null)
         {
             return;
         }
 
-        Rigidbody playerRb = other.GetComponentInParent<Rigidbody>();
+        Rigidbody targetRb = playerMovement.GetComponent<Rigidbody>();
 
-        if (playerRb == null)
+        if (targetRb == null)
+        {
+            targetRb = playerMovement.GetComponentInParent<Rigidbody>();
+        }
+
+        if (targetRb == null)
         {
             return;
         }
 
-        PushPlayer(playerRb);
+        bool colliderLayerMatches = IsInLayerMask(other.gameObject.layer, playerLayer);
+        bool playerLayerMatches = IsInLayerMask(playerMovement.gameObject.layer, playerLayer);
+
+        if (!colliderLayerMatches && !playerLayerMatches)
+        {
+            return;
+        }
+
+        Vector3 pushDirection = GetWhipperPushDirection(targetRb);
+
+        if (activePushes.TryGetValue(playerMovement, out PushInfo existingPush))
+        {
+            existingPush.pushDirection = pushDirection;
+            existingPush.timer = pushDuration;
+            return;
+        }
+
+        PushInfo pushInfo = new PushInfo();
+        pushInfo.rb = targetRb;
+        pushInfo.playerMovement = playerMovement;
+        pushInfo.pushDirection = pushDirection;
+        pushInfo.timer = pushDuration;
+        pushInfo.coroutine = StartCoroutine(PushPlayerCoroutine(pushInfo));
+
+        activePushes.Add(playerMovement, pushInfo);
     }
 
-    private void PushPlayer(Rigidbody playerRb)
+    private IEnumerator PushPlayerCoroutine(PushInfo pushInfo)
     {
-        if (rotatingPart_TRSFM == null)
+        while (pushInfo != null && pushInfo.timer > 0f)
+        {
+            if (pushInfo.playerMovement == null || pushInfo.rb == null)
+            {
+                break;
+            }
+
+            float fade = 1f;
+
+            if (fadePushOverTime && pushDuration > 0.001f)
+            {
+                fade = Mathf.Clamp01(pushInfo.timer / pushDuration);
+            }
+
+            ApplyPushVelocity(pushInfo, fade);
+
+            pushInfo.timer -= Time.deltaTime;
+
+            yield return null;
+        }
+
+        if (pushInfo != null && pushInfo.playerMovement != null)
+        {
+            if (activePushes.ContainsKey(pushInfo.playerMovement))
+            {
+                activePushes.Remove(pushInfo.playerMovement);
+            }
+        }
+    }
+
+    private void ApplyPushVelocity(PushInfo pushInfo, float forceMultiplier)
+    {
+        if (pushInfo == null || pushInfo.playerMovement == null || pushInfo.rb == null)
         {
             return;
         }
 
+        Vector3 pushDirection = pushInfo.pushDirection;
+
+        if (pushDirection.sqrMagnitude < 0.001f)
+        {
+            return;
+        }
+
+        pushDirection.y = 0f;
+
+        if (pushDirection.sqrMagnitude < 0.001f)
+        {
+            return;
+        }
+
+        pushDirection.Normalize();
+
+        Vector3 horizontalVelocity = new Vector3(
+            pushInfo.rb.linearVelocity.x,
+            0f,
+            pushInfo.rb.linearVelocity.z
+        );
+
+        float speedInPushDirection = Vector3.Dot(horizontalVelocity, pushDirection);
+
+        if (speedInPushDirection < maxPushSpeed)
+        {
+            Vector3 velocityChange =
+                pushDirection * pushForce * forceMultiplier * Time.deltaTime;
+
+            pushInfo.playerMovement.AddExternalVelocity(velocityChange);
+        }
+
+        if (stunTime > 0f)
+        {
+            pushInfo.playerMovement.Stun(stunTime);
+        }
+    }
+
+    private Vector3 GetWhipperPushDirection(Rigidbody targetRb)
+    {
         Vector3 axis = localRotationAxis;
 
         if (axis.sqrMagnitude < 0.001f)
@@ -164,7 +300,8 @@ public class Whipper : BaseHazard
 
         axisWorld.Normalize();
 
-        Vector3 fromCenter = playerRb.worldCenterOfMass - rotatingPart_TRSFM.position;
+        Vector3 fromCenter = targetRb.worldCenterOfMass - rotatingPart_TRSFM.position;
+
         Vector3 radialDirection = fromCenter - Vector3.Project(fromCenter, axisWorld);
 
         if (radialDirection.sqrMagnitude < 0.001f)
@@ -183,32 +320,33 @@ public class Whipper : BaseHazard
 
         Vector3 tangentDirection = Vector3.Cross(axisWorld, radialDirection).normalized * directionSign;
 
-        Vector3 finalPushDirection = tangentDirection + radialDirection * outwardForceRatio;
+        // Mostly sweep along the rotation direction,
+        // with a small outward push so the player gets carried away from the center.
+        Vector3 finalDirection = tangentDirection + radialDirection * outwardForceRatio;
 
-        if (finalPushDirection.sqrMagnitude < 0.001f)
+        finalDirection.y = 0f;
+
+        if (finalDirection.sqrMagnitude < 0.001f)
         {
-            finalPushDirection = tangentDirection;
+            finalDirection = tangentDirection;
         }
 
-        finalPushDirection.Normalize();
+        finalDirection.Normalize();
 
-        Vector3 currentHorizontalVelocity = new Vector3(
-            playerRb.linearVelocity.x,
-            0f,
-            playerRb.linearVelocity.z
-        );
+        return finalDirection;
+    }
 
-        float speedInPushDirection = Vector3.Dot(currentHorizontalVelocity, finalPushDirection);
-
-        if (speedInPushDirection < maxHorizontalSpeed)
+    private void StopAllPushCoroutines()
+    {
+        foreach (KeyValuePair<PlayerMovement, PushInfo> pair in activePushes)
         {
-            playerRb.AddForce(finalPushDirection * pushForce, ForceMode.Acceleration);
+            if (pair.Value != null && pair.Value.coroutine != null)
+            {
+                StopCoroutine(pair.Value.coroutine);
+            }
         }
 
-        if (upwardForce > 0f)
-        {
-            playerRb.AddForce(Vector3.up * upwardForce, ForceMode.Acceleration);
-        }
+        activePushes.Clear();
     }
 
     private bool IsInLayerMask(int layer, LayerMask layerMask)

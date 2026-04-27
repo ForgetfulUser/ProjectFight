@@ -6,9 +6,18 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     public Rigidbody rb;
+
     [Header("Move")]
     public float moveSpeed = 20;
     [HideInInspector] public Vector2 moveDir;
+
+    [Header("External Push")]
+    public float externalVelocityDecay = 10f;
+    public float maxExternalSpeed = 24f;
+
+    private Vector3 externalVelocity;
+
+    private float stunTimer;
 
     [Header("Jump")]
     private bool canJump;
@@ -30,6 +39,9 @@ public class PlayerMovement : MonoBehaviour
         this.canJump = canJump;
         rb = GetComponent<Rigidbody>();
         jumpsRemaining = maxJumps;
+
+        externalVelocity = Vector3.zero;
+        stunTimer = 0f;
     }
 
     public void UpdateMovement(out Vector2 moveDir)
@@ -40,7 +52,72 @@ public class PlayerMovement : MonoBehaviour
 
     public void UpdateFixedMovement()
     {
-        rb.linearVelocity = new Vector3(moveDir.x * moveSpeed, rb.linearVelocity.y, moveDir.y * moveSpeed);
+        if (stunTimer > 0f)
+        {
+            stunTimer -= Time.fixedDeltaTime;
+        }
+
+        Vector3 inputVelocity = Vector3.zero;
+
+        if (stunTimer <= 0f)
+        {
+            inputVelocity = new Vector3(
+                moveDir.x * moveSpeed,
+                0f,
+                moveDir.y * moveSpeed
+            );
+        }
+
+        Vector3 finalHorizontalVelocity = inputVelocity + externalVelocity;
+
+        rb.linearVelocity = new Vector3(
+            finalHorizontalVelocity.x,
+            rb.linearVelocity.y,
+            finalHorizontalVelocity.z
+        );
+
+        externalVelocity = Vector3.MoveTowards(
+            externalVelocity,
+            Vector3.zero,
+            externalVelocityDecay * Time.fixedDeltaTime
+        );
+    }
+
+    public void AddExternalVelocity(Vector3 velocityChange)
+    {
+        velocityChange.y = 0f;
+
+        externalVelocity += velocityChange;
+
+        Vector3 horizontalExternalVelocity = new Vector3(
+            externalVelocity.x,
+            0f,
+            externalVelocity.z
+        );
+
+        if (horizontalExternalVelocity.magnitude > maxExternalSpeed)
+        {
+            horizontalExternalVelocity = horizontalExternalVelocity.normalized * maxExternalSpeed;
+
+            externalVelocity = new Vector3(
+                horizontalExternalVelocity.x,
+                0f,
+                horizontalExternalVelocity.z
+            );
+        }
+    }
+
+    public void ClearExternalVelocity()
+    {
+        externalVelocity = Vector3.zero;
+    }
+
+    public void Stun(float duration)
+    {
+        if (duration > stunTimer)
+        {
+            stunTimer = duration;
+        }
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -50,6 +127,11 @@ public class PlayerMovement : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
+        if (stunTimer > 0f)
+        {
+            return;
+        }
+
         if (jumpsRemaining > 0 && canJump)
         {
             if (context.performed)
@@ -69,7 +151,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void GroundCheck()
     {
-
         Collider[] hits = Physics.OverlapBox(
             groundCheckPos.position,
             groundCheckSize,
@@ -85,6 +166,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        if (groundCheckPos == null)
+        {
+            return;
+        }
+
         Gizmos.color = Color.white;
         Gizmos.DrawWireCube(groundCheckPos.position, groundCheckSize);
     }

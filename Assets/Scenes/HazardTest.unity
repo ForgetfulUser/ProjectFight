@@ -119,6 +119,71 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &223774984
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2978750795001133532, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: m_Name
+      value: Whipper
+      objectReference: {fileID: 0}
+    - target: {fileID: 4442544091631092807, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.032885
+      objectReference: {fileID: 0}
+    - target: {fileID: 4442544091631092807, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 4442544091631092807, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -16.406935
+      objectReference: {fileID: 0}
+    - target: {fileID: 4442544091631092807, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4442544091631092807, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4442544091631092807, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4442544091631092807, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4442544091631092807, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4442544091631092807, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4442544091631092807, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: stunTime
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8327913977317693182, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
 --- !u!1001 &462646680
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -186,6 +251,10 @@ PrefabInstance:
     - target: {fileID: 7171137034699130818, guid: 34bc93db184a7c54b9fdc6029db20293, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7688540710742800457, guid: 34bc93db184a7c54b9fdc6029db20293, type: 3}
+      propertyPath: m_Constraints
+      value: 80
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -271,6 +340,7 @@ MonoBehaviour:
   Player_PRFB: {fileID: 1270854682}
   ActivePlayers:
   - {fileID: 1270854682}
+  MinimumFallHeight: -10
   TestingPlayer: {fileID: 0}
 --- !u!4 &648392575
 Transform:
@@ -1043,6 +1113,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7688540710742800457, guid: 34bc93db184a7c54b9fdc6029db20293, type: 3}
+      propertyPath: m_Constraints
+      value: 80
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1253,3 +1327,4 @@ SceneRoots:
   - {fileID: 1666555409}
   - {fileID: 1055319003}
   - {fileID: 1243632561}
+  - {fileID: 223774984}
