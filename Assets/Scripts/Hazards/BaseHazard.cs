@@ -16,6 +16,11 @@ public class BaseHazard : MonoBehaviour
 
     }
 
+    public virtual void FixedUpdateHazard()
+    {
+
+    }
+
     public virtual void ResetHazard()
     {
 

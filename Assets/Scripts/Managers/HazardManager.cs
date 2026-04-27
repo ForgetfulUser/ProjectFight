@@ -34,6 +34,14 @@ public class HazardManager : MonoBehaviour
         }
     }
 
+    public virtual void FixedUpateManager()
+    {
+        foreach(var haz in Hazards)
+        {
+            haz.FixedUpdateHazard();
+        }
+    }
+
     public virtual void ResetHazards()
     {
         foreach (var haz in Hazards)
