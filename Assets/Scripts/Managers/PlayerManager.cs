@@ -7,7 +7,7 @@ public class PlayerManager : MonoBehaviour
     public Player Player_PRFB;
     private List<Vector3> PlayerSpawnPosition = new List<Vector3>();
     public List<Player> ActivePlayers = new List<Player>();
-
+    public float MinimumFallHeight = -10;
     [Header("Play Test Variables")]
     public Player TestingPlayer;
 
@@ -20,6 +20,7 @@ public class PlayerManager : MonoBehaviour
             Destroy(spawnPos.gameObject);
         }
         SpawnPlayers(canJump);
+        if (TestingPlayer) ;
         Player_PRFB.StartPlayer(canJump, 0);
     }
 
@@ -30,11 +31,13 @@ public class PlayerManager : MonoBehaviour
             foreach(var player in ActivePlayers)
             {
                 player.UpdatePlayer();
+                ResetTest(player);
             }
         }
         else
         {
             TestingPlayer.UpdatePlayer();
+            ResetTest(TestingPlayer);
         }
     }
 
@@ -50,6 +53,14 @@ public class PlayerManager : MonoBehaviour
         else
         {
             TestingPlayer.FixedUpdatePlayer();
+        }
+    }
+
+    public void ResetTest(Player player)
+    {
+        if(player.transform.position.y <= MinimumFallHeight)
+        {
+            player.ResetPlayer();
         }
     }
 
