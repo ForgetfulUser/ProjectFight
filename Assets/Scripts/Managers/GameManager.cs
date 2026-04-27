@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
     protected virtual void FixedUpdate()
     {
         PlayerManager.FixedUpdateManager();
+        HazardManager.FixedUpdateManager();
     }
 
     protected virtual void LateUpdate()

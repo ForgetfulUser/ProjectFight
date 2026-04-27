@@ -853,6 +853,30 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: b87cba0e3fd445a48aa23e2667e7503f, type: 2}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: pushForce
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: maxPushSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: outwardForceRatio
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: lingerPushDuration
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: lingerPushForceMultiplier
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: lingerUpwardForceMultiplier
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7341703017998625596, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -1387,8 +1411,7 @@ Transform:
   m_LocalPosition: {x: 11.46283, y: -2.23897, z: -4.4542894}
   m_LocalScale: {x: 25, y: 1, z: 25}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1435718619}
+  m_Children: []
   m_Father: {fileID: 1492332091}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!64 &849097788
@@ -1443,9 +1466,10 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 91841568}
-  - {fileID: 731650058}
   - {fileID: 1113545256}
+  - {fileID: 731650058}
   - {fileID: 1335127545}
+  - {fileID: 1435718619}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1113545256 stripped
@@ -1854,7 +1878,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 849097787}
+    m_TransformParent: {fileID: 1079012622}
     m_Modifications:
     - target: {fileID: 630335553641334580, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: pushForce
@@ -1878,7 +1902,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4442544091631092807, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.15
+      value: 3.7500002
       objectReference: {fileID: 0}
     - target: {fileID: 4442544091631092807, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: m_LocalScale.y
@@ -1886,19 +1910,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4442544091631092807, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.15
+      value: 3.7500002
       objectReference: {fileID: 0}
     - target: {fileID: 4442544091631092807, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 2.25815
       objectReference: {fileID: 0}
     - target: {fileID: 4442544091631092807, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.96000004
+      value: -0.03999996
       objectReference: {fileID: 0}
     - target: {fileID: 4442544091631092807, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -9.824139
       objectReference: {fileID: 0}
     - target: {fileID: 4442544091631092807, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1932,6 +1956,30 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 64bb1f9feb7b0d349b3d802a83b64cba, type: 2}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: pushForce
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: maxPushSpeed
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: outwardForceRatio
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: tangentForceRatio
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: lingerPushDuration
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: lingerPushForceMultiplier
+      value: 0.45
+      objectReference: {fileID: 0}
     - target: {fileID: 7341703017998625596, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -2304,6 +2352,22 @@ PrefabInstance:
     - target: {fileID: 629388996299712908, guid: 186ffcbde9a3a5c4793f7e079d0e1518, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7587992384834621376, guid: 186ffcbde9a3a5c4793f7e079d0e1518, type: 3}
+      propertyPath: jumpPower
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7587992384834621376, guid: 186ffcbde9a3a5c4793f7e079d0e1518, type: 3}
+      propertyPath: defaultStunTime
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7587992384834621376, guid: 186ffcbde9a3a5c4793f7e079d0e1518, type: 3}
+      propertyPath: maxExternalSpeed
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 7587992384834621376, guid: 186ffcbde9a3a5c4793f7e079d0e1518, type: 3}
+      propertyPath: externalVelocityDecay
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8074889265827031309, guid: 186ffcbde9a3a5c4793f7e079d0e1518, type: 3}
       propertyPath: m_Name

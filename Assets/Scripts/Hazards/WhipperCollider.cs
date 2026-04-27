@@ -13,7 +13,7 @@ public class WhipperCollider : MonoBehaviour
     {
         if (whipper != null)
         {
-            whipper.TryPush(other);
+            whipper.RegisterHit(other);
         }
     }
 
@@ -21,7 +21,7 @@ public class WhipperCollider : MonoBehaviour
     {
         if (whipper != null)
         {
-            whipper.TryPush(other);
+            whipper.RegisterHit(other);
         }
     }
 }

@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4442544091631092807}
   - component: {fileID: 5536276771058476219}
-  - component: {fileID: 630335553641334580}
   - component: {fileID: 2343000369833347585}
+  - component: {fileID: 5736825905423627713}
   m_Layer: 0
   m_Name: Whipper
   m_TagString: Untagged
@@ -62,30 +62,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &630335553641334580
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2978750795001133532}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce734e0cb038d254ca1b901194a7d95e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Whipper
-  rotatingPart_TRSFM: {fileID: 5176901559881092514}
-  localRotationAxis: {x: 0, y: 1, z: 0}
-  rotationSpeed: 180
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  pushForce: 350
-  outwardForceRatio: 0.7
-  upwardForce: 30
-  maxHorizontalSpeed: 12
-  invertPushDirection: 0
-  resetWholeObjectTransform: 0
 --- !u!136 &2343000369833347585
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -109,6 +85,33 @@ CapsuleCollider:
   m_Height: 2.1496391
   m_Direction: 1
   m_Center: {x: 0, y: 0.57481956, z: 0}
+--- !u!114 &5736825905423627713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2978750795001133532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce734e0cb038d254ca1b901194a7d95e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Whipper
+  rotatingPart_TRSFM: {fileID: 61532080748409205}
+  whipperCollider: {fileID: 1528251290450886707}
+  localRotationAxis: {x: 0, y: 1, z: 0}
+  rotationSpeed: 180
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  pushForce: 30
+  outwardForceRatio: 0.35
+  maxPushSpeed: 12
+  invertPushDirection: 0
+  pushDuration: 0.45
+  fadePushOverTime: 1
+  stunTime: 0.18
+  resetWholeObjectTransform: 0
 --- !u!1 &5069394275945555312
 GameObject:
   m_ObjectHideFlags: 0
