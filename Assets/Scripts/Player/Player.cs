@@ -11,17 +11,14 @@ public class Player : MonoBehaviour
     public int MaxHealth;
     public int CurrentStamina;
     public int MaxStamina;
-
-    public void InitializePlayer(int playerIndex)
-    {
-
-    }
+    public Vector3 StartPos;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void StartPlayer(bool canJump, int playerIndex)
     {
         PlayerMovement.StartMovement(canJump);
         PlayerIndex = playerIndex;
+        StartPos = transform.localPosition;
     }
 
     // Update is called once per frame
@@ -34,5 +31,10 @@ public class Player : MonoBehaviour
     public void FixedUpdatePlayer()
     {
         PlayerMovement.UpdateFixedMovement();
+    }
+
+    public void ResetPlayer()
+    {
+        transform.localPosition = StartPos;
     }
 }
