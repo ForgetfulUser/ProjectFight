@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4442544091631092807}
   - component: {fileID: 5536276771058476219}
   - component: {fileID: 630335553641334580}
+  - component: {fileID: 2343000369833347585}
   m_Layer: 0
   m_Name: Whipper
   m_TagString: Untagged
@@ -85,6 +86,29 @@ MonoBehaviour:
   maxHorizontalSpeed: 12
   invertPushDirection: 0
   resetWholeObjectTransform: 0
+--- !u!136 &2343000369833347585
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2978750795001133532}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2.1496391
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.57481956, z: 0}
 --- !u!1 &5069394275945555312
 GameObject:
   m_ObjectHideFlags: 0
