@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8325e04b31af99d44b48ec6286d3c60b
+guid: 6c2b6f7fc8c8943468f2aab6aa519efb
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -102,8 +102,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 64
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -112,8 +112,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 27f33ae3fd408a144b1ecea2a44f3d2e
-      internalID: -917905621
+      spriteID: 9c18f7be4f0930f4a8ba547c77513a88
+      internalID: -1265401748
       vertices: []
       indices: 
       edges: []
@@ -122,10 +122,10 @@ TextureImporter:
       name: Devil Idle Sprite Sheet_1
       rect:
         serializedVersion: 2
-        x: 64
+        x: 320
         y: 0
-        width: 64
-        height: 64
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -134,52 +134,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e7432fbc03936c84cbaf8ba8461f5fe9
-      internalID: -1851839970
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Devil Idle Sprite Sheet_2
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: aaa72bbed6e971645b7224a8d78fbceb
-      internalID: 988807491
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Devil Idle Sprite Sheet_3
-      rect:
-        serializedVersion: 2
-        x: 192
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 336e3ae17d26d7e43aab9b78163572d7
-      internalID: -1943882522
+      spriteID: c7438820b01c41847a714c2f1a09f0d1
+      internalID: 2025655085
       vertices: []
       indices: 
       edges: []
@@ -188,7 +144,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: c9587eafe9dd6fc4282f2d74968be08c
+    spriteID: 6315f43526566ac4cb18288198361b51
     internalID: 0
     vertices: []
     indices: 
@@ -198,12 +154,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":320.0,"y":320.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Devil Idle Sprite Sheet_0: -917905621
-      Devil Idle Sprite Sheet_1: -1851839970
-      Devil Idle Sprite Sheet_2: 988807491
-      Devil Idle Sprite Sheet_3: -1943882522
+      Devil Idle Sprite Sheet_0: -1265401748
+      Devil Idle Sprite Sheet_1: 2025655085
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
