@@ -20,8 +20,8 @@ public class PlayerManager : MonoBehaviour
             Destroy(spawnPos.gameObject);
         }
         SpawnPlayers(canJump);
-        if (TestingPlayer) ;
-        Player_PRFB.StartPlayer(canJump, 0);
+        if (TestingPlayer) 
+            Player_PRFB.StartPlayer(canJump, 0);
     }
 
     public void UpdateManager()
