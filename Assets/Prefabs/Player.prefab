@@ -172,6 +172,7 @@ MonoBehaviour:
   MaxHealth: 10
   CurrentStamina: 0
   MaxStamina: 0
+  StartPos: {x: 0, y: 0, z: 0}
 --- !u!114 &7587992384834621376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,8 +188,8 @@ MonoBehaviour:
   rb: {fileID: 1392176331117373401}
   moveSpeed: 10
   moveDir: {x: 0, y: 0}
-  jumpPower: 10
-  maxJumps: 2
+  jumpPower: 15
+  maxJumps: 1
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
