@@ -147,8 +147,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.53, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3763697859623216546}
   - {fileID: 1474889821121465036}
@@ -226,14 +226,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPushComponent
   PushBoxSize: {x: 1, y: 1, z: 0.4}
+  pushBoxForwardOffset: 1
   PlayerLayer:
     serializedVersion: 2
     m_Bits: 128
   pushForce: 55
+  upwardVelocity: 3
   maxPushSpeed: 26
   pushDuration: 0.45
   fadePushOverTime: 1
   stunTime: 0.18
+  showDebugLogs: 1
 --- !u!54 &1392176331117373401
 Rigidbody:
   m_ObjectHideFlags: 0
