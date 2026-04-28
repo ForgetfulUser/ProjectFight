@@ -39,6 +39,6 @@ public class TestPlayerMovementRunner : MonoBehaviour
             return;
         }
 
-        playerMovement.UpdateFixedMovement();
+        //playerMovement.UpdateFixedMovement();
     }
 }

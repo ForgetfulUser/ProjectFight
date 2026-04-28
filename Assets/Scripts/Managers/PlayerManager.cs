@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     public Player Player_PRFB;
+    public List<GameObject> Decals_GO = new List<GameObject>();
     private List<Vector3> PlayerSpawnPosition = new List<Vector3>();
     public List<Player> ActivePlayers = new List<Player>();
     public float MinimumFallHeight = -10;
@@ -71,6 +72,8 @@ public class PlayerManager : MonoBehaviour
         for (int i = 0; i < PlayerSpawnPosition.Count; i++)
         {
             Player player = Instantiate(Player_PRFB, PlayerSpawnPosition[i], Quaternion.identity);
+            GameObject decal = Instantiate(Decals_GO[i], PlayerSpawnPosition[i], Quaternion.identity, player.transform);
+            decal.transform.Rotate(new Vector3(90, 0, 0));
             player.StartPlayer(canJump, i);
             ActivePlayers.Add(player);
         }

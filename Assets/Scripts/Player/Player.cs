@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     {
         PlayerMovement.StartMovement(canJump);
         PlayerIndex = playerIndex;
+        PlayerAnimationController.StartAnimation(PlayerIndex);
         StartPos = transform.localPosition;
     }
 
@@ -32,7 +33,7 @@ public class Player : MonoBehaviour
 
     public void FixedUpdatePlayer()
     {
-        PlayerMovement.UpdateFixedMovement();
+        PlayerMovement.FixedUpdateMovement();
     }
 
     public void ResetPlayer()

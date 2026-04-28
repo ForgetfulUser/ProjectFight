@@ -50,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
         moveDir = this.moveDir;
     }
 
-    public void UpdateFixedMovement()
+    public void FixedUpdateMovement()
     {
         if (stunTimer > 0f)
         {
