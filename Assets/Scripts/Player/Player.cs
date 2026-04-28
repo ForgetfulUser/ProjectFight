@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     public Vector3 StartPos;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public void StartPlayer(bool canJump, int playerIndex)
+    public virtual void StartPlayer(bool canJump, int playerIndex)
     {
         PlayerMovement.StartMovement(canJump);
         PlayerIndex = playerIndex;
@@ -24,20 +24,25 @@ public class Player : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void UpdatePlayer()
+    public virtual void UpdatePlayer()
     {
         PlayerMovement.UpdateMovement(out Vector2 moveDir);
         PlayerAnimationController.UpdateAnimation(moveDir);
         PlayerPushComponent.UpdatePushComponent(moveDir);
     }
 
-    public void FixedUpdatePlayer()
+    public virtual void FixedUpdatePlayer()
     {
         PlayerMovement.FixedUpdateMovement();
     }
 
-    public void ResetPlayer()
+    public virtual void ResetPlayer()
     {
         transform.localPosition = StartPos;
+    }
+
+    public virtual void TagPlayer()
+    {
+
     }
 }
