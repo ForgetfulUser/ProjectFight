@@ -42,11 +42,13 @@ public class SimpleEnemyAI : BaseHazard
 
     [Header("Instant Push")]
     public float instantPushVelocity = 8f;
+    public float instantUpwardVelocity = 3f;
     public float instantStunTime = 0.2f;
 
     [Header("Smooth Push")]
     public float smoothPushDuration = 0.25f;
     public float smoothPushForce = 35f;
+    public float smoothUpwardVelocity = 3f;
     public float smoothStunTime = 0.12f;
     public float maxPushSpeed = 10f;
 
@@ -72,6 +74,7 @@ public class SimpleEnemyAI : BaseHazard
     private PlayerMovement pushedPlayerMovement;
     private Vector3 smoothPushDirection;
     private float smoothPushTimer;
+    private bool smoothUpwardApplied;
 
     private bool hasStarted;
 
@@ -445,6 +448,11 @@ public class SimpleEnemyAI : BaseHazard
 
         targetPlayerMovement.AddExternalVelocity(velocityChange);
 
+        if (instantUpwardVelocity > 0f)
+        {
+            targetPlayerMovement.AddVerticalVelocity(instantUpwardVelocity);
+        }
+
         if (instantStunTime > 0f)
         {
             targetPlayerMovement.Stun(instantStunTime);
@@ -457,6 +465,9 @@ public class SimpleEnemyAI : BaseHazard
         pushedPlayerMovement = targetPlayerMovement;
         smoothPushDirection = GetPushDirection(targetRb);
         smoothPushTimer = smoothPushDuration;
+        smoothUpwardApplied = false;
+
+        ApplySmoothUpwardOnce();
     }
 
     private void UpdateSmoothPush()
@@ -507,12 +518,34 @@ public class SimpleEnemyAI : BaseHazard
         }
     }
 
+    private void ApplySmoothUpwardOnce()
+    {
+        if (smoothUpwardApplied)
+        {
+            return;
+        }
+
+        if (pushedPlayerMovement == null)
+        {
+            return;
+        }
+
+        if (smoothUpwardVelocity <= 0f)
+        {
+            return;
+        }
+
+        pushedPlayerMovement.AddVerticalVelocity(smoothUpwardVelocity);
+        smoothUpwardApplied = true;
+    }
+
     private void ClearSmoothPush()
     {
         pushedRb = null;
         pushedPlayerMovement = null;
         smoothPushDirection = Vector3.zero;
         smoothPushTimer = 0f;
+        smoothUpwardApplied = false;
     }
 
     private Vector3 GetPushDirection(Rigidbody targetRb)
