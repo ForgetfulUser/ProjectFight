@@ -2073,6 +2073,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3255869581789678136, guid: 0f084030525061a4d9d6ead0cb0bb6e6, type: 3}
+      propertyPath: MinimumFallHeight
+      value: -5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3255869581789678136, guid: 0f084030525061a4d9d6ead0cb0bb6e6, type: 3}
       propertyPath: 'Decals_GO.Array.data[0]'
       value: 
       objectReference: {fileID: 2661987260041910621, guid: 3eb587376290bad4f84d6fe9f36e13df, type: 3}
@@ -2154,6 +2158,10 @@ PrefabInstance:
     - target: {fileID: 629388996299712908, guid: 186ffcbde9a3a5c4793f7e079d0e1518, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2203776891576585838, guid: 186ffcbde9a3a5c4793f7e079d0e1518, type: 3}
+      propertyPath: pushForce
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8074889265827031309, guid: 186ffcbde9a3a5c4793f7e079d0e1518, type: 3}
       propertyPath: m_Name
