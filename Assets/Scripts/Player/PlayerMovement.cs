@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 externalVelocity;
 
+    [Header("Stun")]
     private float stunTimer;
 
     [Header("Jump")]
@@ -28,12 +29,11 @@ public class PlayerMovement : MonoBehaviour
     [Header("Ground Check")]
     public LayerMask groundLayer;
     public Transform groundCheckPos;
-    public Vector3 groundCheckSize = new Vector2(0.5f, 0.5f);
+    public Vector3 groundCheckSize = new Vector3(0.5f, 0.5f, 0.5f);
 
     [Header("Fall Speed")]
     public float maxFallSpeed = 18;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void StartMovement(bool canJump)
     {
         this.canJump = canJump;
@@ -81,6 +81,8 @@ public class PlayerMovement : MonoBehaviour
             Vector3.zero,
             externalVelocityDecay * Time.fixedDeltaTime
         );
+
+        LimitFallSpeed();
     }
 
     public void AddExternalVelocity(Vector3 velocityChange)
@@ -105,6 +107,25 @@ public class PlayerMovement : MonoBehaviour
                 horizontalExternalVelocity.z
             );
         }
+    }
+
+    public void AddVerticalVelocity(float verticalVelocity)
+    {
+        if (rb == null)
+        {
+            return;
+        }
+
+        if (verticalVelocity <= 0f)
+        {
+            return;
+        }
+
+        rb.linearVelocity = new Vector3(
+            rb.linearVelocity.x,
+            Mathf.Max(rb.linearVelocity.y, verticalVelocity),
+            rb.linearVelocity.z
+        );
     }
 
     public void ClearExternalVelocity()
@@ -136,14 +157,22 @@ public class PlayerMovement : MonoBehaviour
         {
             if (context.performed)
             {
-                // Hold jump for full height
-                rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpPower, rb.linearVelocity.z);
+                rb.linearVelocity = new Vector3(
+                    rb.linearVelocity.x,
+                    jumpPower,
+                    rb.linearVelocity.z
+                );
+
                 jumpsRemaining--;
             }
             else if (context.canceled)
             {
-                // Release jump early for half height
-                rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f, rb.linearVelocity.z);
+                rb.linearVelocity = new Vector3(
+                    rb.linearVelocity.x,
+                    rb.linearVelocity.y * 0.5f,
+                    rb.linearVelocity.z
+                );
+
                 jumpsRemaining--;
             }
         }
@@ -151,6 +180,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void GroundCheck()
     {
+        if (groundCheckPos == null)
+        {
+            return;
+        }
+
         Collider[] hits = Physics.OverlapBox(
             groundCheckPos.position,
             groundCheckSize,
@@ -164,6 +198,18 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void LimitFallSpeed()
+    {
+        if (rb.linearVelocity.y < -maxFallSpeed)
+        {
+            rb.linearVelocity = new Vector3(
+                rb.linearVelocity.x,
+                -maxFallSpeed,
+                rb.linearVelocity.z
+            );
+        }
+    }
+
     private void OnDrawGizmosSelected()
     {
         if (groundCheckPos == null)
@@ -172,6 +218,6 @@ public class PlayerMovement : MonoBehaviour
         }
 
         Gizmos.color = Color.white;
-        Gizmos.DrawWireCube(groundCheckPos.position, groundCheckSize);
+        Gizmos.DrawWireCube(groundCheckPos.position, groundCheckSize * 2f);
     }
 }

@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class Whipper : BaseHazard
 {
-    private class PushInfo
+    public class PushInfo
     {
         public Rigidbody rb;
         public PlayerMovement playerMovement;
         public Vector3 pushDirection;
         public float timer;
         public Coroutine coroutine;
+        public bool upwardApplied;
     }
 
     [Header("Rotating Part")]
@@ -32,10 +33,14 @@ public class Whipper : BaseHazard
     public float maxPushSpeed = 26f;
     public bool invertPushDirection = false;
 
+    [Header("Upward Launch")]
+    public float upwardVelocity = 4f;
+    public bool applyUpwardOnlyOnNewHit = true;
+
     [Header("After-Hit Coroutine Push")]
     public float pushDuration = 0.45f;
     public bool fadePushOverTime = true;
-    public float stunTime = 0.18f;
+    public float playerStunTime = 0.18f;
 
     [Header("Reset")]
     public bool resetWholeObjectTransform = false;
@@ -66,8 +71,8 @@ public class Whipper : BaseHazard
 
     public override void FixedUpdateHazard()
     {
-        // Keep empty for now.
-        // Push is handled through coroutine + PlayerMovement external velocity.
+        // Empty for now.
+        // The Whipper uses UpdateHazard + coroutine push + PlayerMovement external velocity.
     }
 
     public override void ResetHazard()
@@ -188,11 +193,53 @@ public class Whipper : BaseHazard
 
         Vector3 pushDirection = GetWhipperPushDirection(targetRb);
 
+        StartPush(
+            targetRb,
+            playerMovement,
+            pushDirection,
+            true
+        );
+    }
+
+    public PushInfo StartPush(
+        Rigidbody targetRb,
+        PlayerMovement playerMovement,
+        Vector3 pushDirection,
+        bool applyUpward
+    )
+    {
+        if (targetRb == null || playerMovement == null)
+        {
+            return null;
+        }
+
+        if (pushDirection.sqrMagnitude < 0.001f)
+        {
+            pushDirection = playerMovement.transform.position - transform.position;
+            pushDirection.y = 0f;
+
+            if (pushDirection.sqrMagnitude < 0.001f)
+            {
+                pushDirection = transform.forward;
+            }
+        }
+
+        pushDirection.y = 0f;
+        pushDirection.Normalize();
+
         if (activePushes.TryGetValue(playerMovement, out PushInfo existingPush))
         {
+            existingPush.rb = targetRb;
+            existingPush.playerMovement = playerMovement;
             existingPush.pushDirection = pushDirection;
             existingPush.timer = pushDuration;
-            return;
+
+            if (!applyUpwardOnlyOnNewHit && applyUpward)
+            {
+                ApplyUpwardLaunch(existingPush);
+            }
+
+            return existingPush;
         }
 
         PushInfo pushInfo = new PushInfo();
@@ -200,9 +247,43 @@ public class Whipper : BaseHazard
         pushInfo.playerMovement = playerMovement;
         pushInfo.pushDirection = pushDirection;
         pushInfo.timer = pushDuration;
+        pushInfo.upwardApplied = false;
+
         pushInfo.coroutine = StartCoroutine(PushPlayerCoroutine(pushInfo));
 
         activePushes.Add(playerMovement, pushInfo);
+
+        if (applyUpward)
+        {
+            ApplyUpwardLaunch(pushInfo);
+        }
+
+        return pushInfo;
+    }
+
+    public bool TryGetPushInfo(PlayerMovement playerMovement, out PushInfo pushInfo)
+    {
+        return activePushes.TryGetValue(playerMovement, out pushInfo);
+    }
+
+    public void StopPush(PlayerMovement playerMovement)
+    {
+        if (playerMovement == null)
+        {
+            return;
+        }
+
+        if (!activePushes.TryGetValue(playerMovement, out PushInfo pushInfo))
+        {
+            return;
+        }
+
+        if (pushInfo != null && pushInfo.coroutine != null)
+        {
+            StopCoroutine(pushInfo.coroutine);
+        }
+
+        activePushes.Remove(playerMovement);
     }
 
     private IEnumerator PushPlayerCoroutine(PushInfo pushInfo)
@@ -276,10 +357,31 @@ public class Whipper : BaseHazard
             pushInfo.playerMovement.AddExternalVelocity(velocityChange);
         }
 
-        if (stunTime > 0f)
+        if (playerStunTime > 0f)
         {
-            pushInfo.playerMovement.Stun(stunTime);
+            pushInfo.playerMovement.Stun(playerStunTime);
         }
+    }
+
+    private void ApplyUpwardLaunch(PushInfo pushInfo)
+    {
+        if (pushInfo == null || pushInfo.playerMovement == null)
+        {
+            return;
+        }
+
+        if (upwardVelocity <= 0f)
+        {
+            return;
+        }
+
+        if (applyUpwardOnlyOnNewHit && pushInfo.upwardApplied)
+        {
+            return;
+        }
+
+        pushInfo.playerMovement.AddVerticalVelocity(upwardVelocity);
+        pushInfo.upwardApplied = true;
     }
 
     private Vector3 GetWhipperPushDirection(Rigidbody targetRb)
@@ -320,8 +422,6 @@ public class Whipper : BaseHazard
 
         Vector3 tangentDirection = Vector3.Cross(axisWorld, radialDirection).normalized * directionSign;
 
-        // Mostly sweep along the rotation direction,
-        // with a small outward push so the player gets carried away from the center.
         Vector3 finalDirection = tangentDirection + radialDirection * outwardForceRatio;
 
         finalDirection.y = 0f;

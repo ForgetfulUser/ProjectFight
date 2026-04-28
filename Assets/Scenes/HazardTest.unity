@@ -175,6 +175,26 @@ PrefabInstance:
       propertyPath: stunTime
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: pushForce
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: maxPushSpeed
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: rotationSpeed
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: outwardForceRatio
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: applyUpwardOnlyOnNewHit
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8327913977317693182, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: m_IsTrigger
       value: 1
