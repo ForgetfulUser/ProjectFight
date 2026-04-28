@@ -8,12 +8,14 @@ using static UnityEngine.GraphicsBuffer;
 public class PlayerPushComponent : MonoBehaviour
 {
     [Header("Push Detection")]
-    public Vector3 PushBoxSize;
+    public Vector3 PushBoxSize = new Vector3(1f, 0.75f, 1f);
+    public float pushBoxForwardOffset = 1f;
     public LayerMask PlayerLayer;
     private bool tryPush;
 
     [Header("Push Force")]
     public float pushForce = 55f;
+    public float upwardVelocity = 3f;
     public float maxPushSpeed = 26f;
     private Vector3 pushDirection;
 
@@ -22,55 +24,114 @@ public class PlayerPushComponent : MonoBehaviour
     public bool fadePushOverTime = true;
     public float stunTime = 0.18f;
 
-    private readonly Dictionary<PlayerMovement, Whipper.PushInfo> activePushes = new Dictionary<PlayerMovement, Whipper.PushInfo>();
+    [Header("Debug")]
+    public bool showDebugLogs = true;
+
+    private readonly Dictionary<PlayerMovement, Whipper.PushInfo> activePushes =
+        new Dictionary<PlayerMovement, Whipper.PushInfo>();
+
+    private PlayerMovement ownerPlayerMovement;
+
+    private void Awake()
+    {
+        ownerPlayerMovement = GetComponentInParent<PlayerMovement>();
+    }
 
     public void Attack(InputAction.CallbackContext context)
     {
-        Debug.Log("Attack");
+        if (showDebugLogs)
+        {
+            Debug.Log("Attack");
+        }
+
         tryPush = context.performed;
-        if (tryPush == false) pushDirection = Vector3.zero;
+
+        if (tryPush == false)
+        {
+            pushDirection = Vector3.zero;
+        }
     }
 
     public void UpdatePushComponent(Vector2 moveDir)
     {
-        if (tryPush == false && activePushes.Count == 0) return;
-        Debug.Log("Try Push");
+        if (tryPush == false && activePushes.Count == 0)
+        {
+            return;
+        }
 
-        // Make Push Box
-        pushDirection = new Vector3(
-            moveDir.x,
-            0,
-            moveDir.y / 2
-            );
+        if (tryPush == false)
+        {
+            return;
+        }
 
-        Vector3 boxPosition = transform.position + pushDirection;
+        tryPush = false;
+
+        if (showDebugLogs)
+        {
+            Debug.Log("Try Push");
+        }
+
+        pushDirection = GetPushDirection(moveDir);
+
+        Vector3 boxPosition = transform.position + pushDirection * pushBoxForwardOffset;
+        Quaternion boxRotation = Quaternion.LookRotation(pushDirection, Vector3.up);
 
         Collider[] hits = Physics.OverlapBox(
             boxPosition,
             PushBoxSize,
-            Quaternion.identity,
+            boxRotation,
             PlayerLayer
         );
-        if (hits.Length > 0) Debug.Log(hits.Length + " hits foudn"); 
-        // Stop player Coroutines
-        StopAllCoroutines();
 
-        // Apply Push
+        if (hits.Length > 0 && showDebugLogs)
+        {
+            Debug.Log(hits.Length + " hits foudn");
+        }
+
         foreach (Collider hit in hits)
         {
-            if (hit.gameObject != gameObject)
-            {
-                RegisterHit(hit);
-            }
+            RegisterHit(hit);
         }
+    }
+
+    private Vector3 GetPushDirection(Vector2 moveDir)
+    {
+        Vector3 direction = new Vector3(
+            moveDir.x,
+            0f,
+            moveDir.y
+        );
+
+        if (direction.sqrMagnitude < 0.001f)
+        {
+            direction = transform.forward;
+            direction.y = 0f;
+        }
+
+        if (direction.sqrMagnitude < 0.001f)
+        {
+            direction = Vector3.forward;
+        }
+
+        direction.Normalize();
+        return direction;
     }
 
     private void RegisterHit(Collider hit)
     {
-        Debug.Log("Registering Hit: " + hit.name);
+        if (showDebugLogs)
+        {
+            Debug.Log("Registering Hit: " + hit.name);
+        }
+
         PlayerMovement playerMovement = hit.GetComponentInParent<PlayerMovement>();
 
         if (playerMovement == null)
+        {
+            return;
+        }
+
+        if (playerMovement == ownerPlayerMovement)
         {
             return;
         }
@@ -94,26 +155,34 @@ public class PlayerPushComponent : MonoBehaviour
         {
             return;
         }
-        
-        //Vector3 pushDirection = Vector3.zero;
 
         if (activePushes.TryGetValue(playerMovement, out Whipper.PushInfo existingPush))
         {
+            existingPush.rb = targetRb;
+            existingPush.playerMovement = playerMovement;
             existingPush.pushDirection = pushDirection;
             existingPush.timer = pushDuration;
+
             return;
         }
-        Debug.Log("Applying Push");
+
+        if (showDebugLogs)
+        {
+            Debug.Log("Applying Push");
+        }
+
         Whipper.PushInfo pushInfo = new Whipper.PushInfo();
         pushInfo.rb = targetRb;
         pushInfo.playerMovement = playerMovement;
         pushInfo.pushDirection = pushDirection;
         pushInfo.timer = pushDuration;
+        pushInfo.upwardApplied = false;
         pushInfo.coroutine = StartCoroutine(PushPlayerCoroutine(pushInfo));
 
         activePushes.Add(playerMovement, pushInfo);
-    }
 
+        ApplyUpwardLaunch(pushInfo);
+    }
 
     private IEnumerator PushPlayerCoroutine(Whipper.PushInfo pushInfo)
     {
@@ -154,21 +223,21 @@ public class PlayerPushComponent : MonoBehaviour
             return;
         }
 
-        Vector3 pushDirection = pushInfo.pushDirection;
+        Vector3 currentPushDirection = pushInfo.pushDirection;
 
-        if (pushDirection.sqrMagnitude < 0.001f)
+        if (currentPushDirection.sqrMagnitude < 0.001f)
         {
             return;
         }
 
-        pushDirection.y = 0f;
+        currentPushDirection.y = 0f;
 
-        if (pushDirection.sqrMagnitude < 0.001f)
+        if (currentPushDirection.sqrMagnitude < 0.001f)
         {
             return;
         }
 
-        pushDirection.Normalize();
+        currentPushDirection.Normalize();
 
         Vector3 horizontalVelocity = new Vector3(
             pushInfo.rb.linearVelocity.x,
@@ -176,12 +245,12 @@ public class PlayerPushComponent : MonoBehaviour
             pushInfo.rb.linearVelocity.z
         );
 
-        float speedInPushDirection = Vector3.Dot(horizontalVelocity, pushDirection);
+        float speedInPushDirection = Vector3.Dot(horizontalVelocity, currentPushDirection);
 
         if (speedInPushDirection < maxPushSpeed)
         {
             Vector3 velocityChange =
-                pushDirection * pushForce * forceMultiplier * Time.deltaTime;
+                currentPushDirection * pushForce * forceMultiplier * Time.deltaTime;
 
             pushInfo.playerMovement.AddExternalVelocity(velocityChange);
         }
@@ -191,7 +260,31 @@ public class PlayerPushComponent : MonoBehaviour
             pushInfo.playerMovement.Stun(stunTime);
         }
 
-        Debug.Log("Comle");
+        if (showDebugLogs)
+        {
+            Debug.Log("Comle");
+        }
+    }
+
+    private void ApplyUpwardLaunch(Whipper.PushInfo pushInfo)
+    {
+        if (pushInfo == null || pushInfo.playerMovement == null)
+        {
+            return;
+        }
+
+        if (upwardVelocity <= 0f)
+        {
+            return;
+        }
+
+        if (pushInfo.upwardApplied)
+        {
+            return;
+        }
+
+        pushInfo.playerMovement.AddVerticalVelocity(upwardVelocity);
+        pushInfo.upwardApplied = true;
     }
 
     private bool IsInLayerMask(int layer, LayerMask layerMask)
@@ -199,9 +292,51 @@ public class PlayerPushComponent : MonoBehaviour
         return (layerMask.value & (1 << layer)) != 0;
     }
 
+    private void StopAllPushes()
+    {
+        foreach (KeyValuePair<PlayerMovement, Whipper.PushInfo> pair in activePushes)
+        {
+            if (pair.Value != null && pair.Value.coroutine != null)
+            {
+                StopCoroutine(pair.Value.coroutine);
+            }
+        }
+
+        activePushes.Clear();
+    }
+
+    private void OnDisable()
+    {
+        StopAllPushes();
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(transform.position + pushDirection, PushBoxSize);
+
+        Vector3 drawDirection = pushDirection;
+
+        if (drawDirection.sqrMagnitude < 0.001f)
+        {
+            drawDirection = transform.forward;
+            drawDirection.y = 0f;
+        }
+
+        if (drawDirection.sqrMagnitude < 0.001f)
+        {
+            drawDirection = Vector3.forward;
+        }
+
+        drawDirection.Normalize();
+
+        Vector3 drawCenter = transform.position + drawDirection * pushBoxForwardOffset;
+        Quaternion drawRotation = Quaternion.LookRotation(drawDirection, Vector3.up);
+
+        Matrix4x4 oldMatrix = Gizmos.matrix;
+
+        Gizmos.matrix = Matrix4x4.TRS(drawCenter, drawRotation, Vector3.one);
+        Gizmos.DrawWireCube(Vector3.zero, PushBoxSize * 2f);
+
+        Gizmos.matrix = oldMatrix;
     }
 }
