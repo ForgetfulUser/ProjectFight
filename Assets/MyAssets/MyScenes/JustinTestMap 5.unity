@@ -208,8 +208,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: b87cba0e3fd445a48aa23e2667e7503f, type: 2}
     - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: pushForce
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: maxPushSpeed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: rotationSpeed
-      value: 60
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: outwardForceRatio
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 7341703017998625596, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -866,12 +878,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: b87cba0e3fd445a48aa23e2667e7503f, type: 2}
     - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: pushForce
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: maxPushSpeed
-      value: 20
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: rotationSpeed
-      value: 60
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: outwardForceRatio
@@ -995,8 +1011,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: b87cba0e3fd445a48aa23e2667e7503f, type: 2}
     - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: pushForce
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: maxPushSpeed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: rotationSpeed
-      value: 60
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: outwardForceRatio
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 7341703017998625596, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -1927,8 +1955,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: b87cba0e3fd445a48aa23e2667e7503f, type: 2}
     - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: pushForce
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: maxPushSpeed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: rotationSpeed
-      value: 60
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: outwardForceRatio
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 7341703017998625596, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -2411,15 +2451,15 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 64bb1f9feb7b0d349b3d802a83b64cba, type: 2}
     - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: pushForce
-      value: 20
+      value: 1200
       objectReference: {fileID: 0}
     - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: maxPushSpeed
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: rotationSpeed
-      value: 60
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: upwardVelocity

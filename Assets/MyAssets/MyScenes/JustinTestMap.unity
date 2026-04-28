@@ -601,6 +601,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 64bb1f9feb7b0d349b3d802a83b64cba, type: 2}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: pushForce
+      value: 1500
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: maxPushSpeed
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736825905423627713, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
+      propertyPath: rotationSpeed
+      value: 160
+      objectReference: {fileID: 0}
     - target: {fileID: 7341703017998625596, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
