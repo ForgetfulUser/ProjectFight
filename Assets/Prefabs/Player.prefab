@@ -126,6 +126,7 @@ GameObject:
   - component: {fileID: 6608655026131374792}
   - component: {fileID: 7587992384834621376}
   - component: {fileID: 2627637259430525071}
+  - component: {fileID: 2203776891576585838}
   - component: {fileID: 1392176331117373401}
   - component: {fileID: 7914208197252688345}
   - component: {fileID: 2913404083196610203}
@@ -167,12 +168,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   PlayerMovement: {fileID: 7587992384834621376}
   PlayerAnimationController: {fileID: 2627637259430525071}
+  PlayerPushComponent: {fileID: 2203776891576585838}
   PlayerIndex: 0
   CurrentHealth: 10
   MaxHealth: 10
   CurrentStamina: 0
   MaxStamina: 0
-  StartPos: {x: 0, y: 0, z: 0}
+  StartPos: {x: 0, y: 1.53, z: 0}
 --- !u!114 &7587992384834621376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -190,7 +192,6 @@ MonoBehaviour:
   moveDir: {x: 0, y: 0}
   externalVelocityDecay: 10
   maxExternalSpeed: 24
-  defaultStunTime: 0.25
   jumpPower: 10
   maxJumps: 1
   groundLayer:
@@ -212,6 +213,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationController
   Animator: {fileID: 8692551883824260078}
+--- !u!114 &2203776891576585838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8074889265827031309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5ea505424f41a64eb9749f5f7bfc3b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPushComponent
+  PushBoxSize: {x: 1, y: 1, z: 0.4}
+  PlayerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  pushForce: 55
+  maxPushSpeed: 26
+  pushDuration: 0.45
+  fadePushOverTime: 1
+  stunTime: 0.18
 --- !u!54 &1392176331117373401
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -258,7 +280,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1.5, z: 0.75}
+  m_Size: {x: 1, y: 1.5, z: 0.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2913404083196610203
 MonoBehaviour:
@@ -306,7 +328,19 @@ MonoBehaviour:
     m_ActionId: 6b444451-8a00-4d00-a97e-f47457f736a8
     m_ActionName: 'Player/Look[/Mouse/delta]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2203776891576585838}
+        m_TargetAssemblyTypeName: PlayerPushComponent, Assembly-CSharp
+        m_MethodName: Attack
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 6c2ab1b8-8984-453a-af3d-a3c78ae1679a
     m_ActionName: 'Player/Attack[/Mouse/leftButton,/Keyboard/enter]'
   - m_PersistentCalls:

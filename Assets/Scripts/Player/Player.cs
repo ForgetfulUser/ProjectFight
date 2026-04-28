@@ -5,6 +5,7 @@ public class Player : MonoBehaviour
 {
     public PlayerMovement PlayerMovement;
     public PlayerAnimationController PlayerAnimationController;
+    public PlayerPushComponent PlayerPushComponent;
     public int PlayerIndex = -1;
     [Header("Stats")]
     public int CurrentHealth;
@@ -26,6 +27,7 @@ public class Player : MonoBehaviour
     {
         PlayerMovement.UpdateMovement(out Vector2 moveDir);
         PlayerAnimationController.UpdateAnimation(moveDir);
+        PlayerPushComponent.UpdatePushComponent(moveDir);
     }
 
     public void FixedUpdatePlayer()
