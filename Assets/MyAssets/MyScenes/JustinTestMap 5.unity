@@ -529,7 +529,7 @@ PrefabInstance:
     - target: {fileID: 3255869581789678136, guid: 0f084030525061a4d9d6ead0cb0bb6e6, type: 3}
       propertyPath: 'Decals_GO.Array.data[3]'
       value: 
-      objectReference: {fileID: 2942646545858255020, guid: 61a3d816f39eb24408b99c4e3c800f80, type: 3}
+      objectReference: {fileID: 2942646545858255020, guid: 035a90a30b9613b488d962633c867054, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -1146,6 +1146,10 @@ PrefabInstance:
     - target: {fileID: 1288813331127571023, guid: 7a939c37acc87ef40b475efd02c63904, type: 3}
       propertyPath: activeTime
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1288813331127571023, guid: 7a939c37acc87ef40b475efd02c63904, type: 3}
+      propertyPath: hiddenTime
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1288813331127571023, guid: 7a939c37acc87ef40b475efd02c63904, type: 3}
       propertyPath: triggerMode
@@ -2253,6 +2257,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1288813331127571023, guid: 7a939c37acc87ef40b475efd02c63904, type: 3}
+      propertyPath: hiddenTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1288813331127571023, guid: 7a939c37acc87ef40b475efd02c63904, type: 3}
       propertyPath: triggerMode
       value: 1
       objectReference: {fileID: 0}
@@ -2583,6 +2591,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1288813331127571023, guid: 7a939c37acc87ef40b475efd02c63904, type: 3}
+      propertyPath: hiddenTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1288813331127571023, guid: 7a939c37acc87ef40b475efd02c63904, type: 3}
       propertyPath: triggerMode
       value: 1
       objectReference: {fileID: 0}
@@ -2817,6 +2829,10 @@ PrefabInstance:
     - target: {fileID: 1288813331127571023, guid: 7a939c37acc87ef40b475efd02c63904, type: 3}
       propertyPath: activeTime
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1288813331127571023, guid: 7a939c37acc87ef40b475efd02c63904, type: 3}
+      propertyPath: hiddenTime
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1288813331127571023, guid: 7a939c37acc87ef40b475efd02c63904, type: 3}
       propertyPath: triggerMode
