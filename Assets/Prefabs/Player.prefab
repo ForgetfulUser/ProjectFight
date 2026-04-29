@@ -181,7 +181,7 @@ Transform:
   m_GameObject: {fileID: 8074889265827031309}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.53, z: 0}
+  m_LocalPosition: {x: 0, y: 2.43, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -546,6 +546,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: P3 Blob
       objectReference: {fileID: 0}
+    - target: {fileID: 3193906646246087407, guid: 8dce827963729e34a81d5037f3777caf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6638608185933315377, guid: 8dce827963729e34a81d5037f3777caf, type: 3}
       propertyPath: m_Size.z
       value: 15
@@ -629,6 +633,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: P2 Blob
       objectReference: {fileID: 0}
+    - target: {fileID: 8753534348221204508, guid: 7b2a8a7c3992f1445a040bac9fc90f85, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -655,6 +663,10 @@ PrefabInstance:
     - target: {fileID: 2661987260041910621, guid: ed8289ae53f852d4391a59bbe5fd634d, type: 3}
       propertyPath: m_Name
       value: P1 Blob
+      objectReference: {fileID: 0}
+    - target: {fileID: 2661987260041910621, guid: ed8289ae53f852d4391a59bbe5fd634d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4786178593075633222, guid: ed8289ae53f852d4391a59bbe5fd634d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -730,6 +742,10 @@ PrefabInstance:
     - target: {fileID: 2942646545858255020, guid: 035a90a30b9613b488d962633c867054, type: 3}
       propertyPath: m_Name
       value: P4 Blob
+      objectReference: {fileID: 0}
+    - target: {fileID: 2942646545858255020, guid: 035a90a30b9613b488d962633c867054, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2972302534309850331, guid: 035a90a30b9613b488d962633c867054, type: 3}
       propertyPath: m_Size.z
