@@ -514,11 +514,11 @@ public class SimpleEnemyAI : BaseHazard
 
         Vector3 velocityChange = direction * instantPushVelocity;
 
-        targetPlayerMovement.AddExternalVelocity(velocityChange);
+        //targetPlayerMovement.AddExternalVelocity(velocityChange);
 
         if (instantUpwardVelocity > 0f)
         {
-            targetPlayerMovement.AddVerticalVelocity(instantUpwardVelocity);
+            //targetPlayerMovement.AddVerticalVelocity(instantUpwardVelocity);
         }
 
         if (instantStunTime > 0f)
@@ -577,7 +577,7 @@ public class SimpleEnemyAI : BaseHazard
             Vector3 velocityChange =
                 smoothPushDirection * smoothPushForce * Time.deltaTime;
 
-            pushedPlayerMovement.AddExternalVelocity(velocityChange);
+            //pushedPlayerMovement.AddExternalVelocity(velocityChange);
         }
 
         if (smoothStunTime > 0f)
@@ -603,7 +603,7 @@ public class SimpleEnemyAI : BaseHazard
             return;
         }
 
-        pushedPlayerMovement.AddVerticalVelocity(smoothUpwardVelocity);
+        //pushedPlayerMovement.AddVerticalVelocity(smoothUpwardVelocity);
         smoothUpwardApplied = true;
     }
 

@@ -29,7 +29,7 @@ public class TestPlayerMovementRunner : MonoBehaviour
         }
 
         Vector2 currentMoveDir;
-        playerMovement.UpdateMovement(out currentMoveDir);
+        playerMovement.UpdateMovement(out currentMoveDir, out bool isJumping);
     }
 
     private void FixedUpdate()

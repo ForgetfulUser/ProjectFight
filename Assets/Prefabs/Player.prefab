@@ -170,10 +170,8 @@ MonoBehaviour:
   PlayerAnimationController: {fileID: 2627637259430525071}
   PlayerPushComponent: {fileID: 2203776891576585838}
   PlayerIndex: 0
-  CurrentHealth: 10
-  MaxHealth: 10
-  CurrentStamina: 0
-  MaxStamina: 0
+  CurrentLives: 0
+  MaxLives: 0
   StartPos: {x: 0, y: 1.53, z: 0}
 --- !u!114 &7587992384834621376
 MonoBehaviour:
@@ -188,12 +186,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   rb: {fileID: 1392176331117373401}
+  extraGeneralGravity: 4
+  extraDecsentGravity: 2
   moveSpeed: 10
   moveDir: {x: 0, y: 0}
-  externalVelocityDecay: 10
-  maxExternalSpeed: 24
-  jumpPower: 10
-  maxJumps: 1
+  maxForceCoolDown: 1
+  jumpPower: 25
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -213,6 +211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationController
   Animator: {fileID: 8692551883824260078}
+  sprites: []
 --- !u!114 &2203776891576585838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,6 +224,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5ea505424f41a64eb9749f5f7bfc3b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPushComponent
+  pushForce: 100
+  upwardVelocity: 20
   PushBoxSize: {x: 1, y: 1, z: 0.4}
   pushBoxForwardOffset: 1
   PlayerLayer:
@@ -245,7 +246,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8074889265827031309}
   serializedVersion: 5
-  m_Mass: 1
+  m_Mass: 5
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -258,7 +259,7 @@ Rigidbody:
     serializedVersion: 2
     m_Bits: 0
   m_ImplicitCom: 1
-  m_ImplicitTensor: 1
+  m_ImplicitTensor: 0
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0

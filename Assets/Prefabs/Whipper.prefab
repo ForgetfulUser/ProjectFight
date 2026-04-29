@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4442544091631092807}
-  - component: {fileID: 5536276771058476219}
   - component: {fileID: 2343000369833347585}
   - component: {fileID: 5736825905423627713}
   m_Layer: 0
@@ -35,33 +34,6 @@ Transform:
   - {fileID: 5176901559881092514}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &5536276771058476219
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2978750795001133532}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!136 &2343000369833347585
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -97,14 +69,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce734e0cb038d254ca1b901194a7d95e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Whipper
+  doesApplyForce: 1
+  forceMode: 1
+  forceAmount: 30
+  angleOfForce: 1
+  upwardForceMultiplier: 100
+  forceCooldown: 0
+  stunDuration: 0
   rotatingPart_TRSFM: {fileID: 61532080748409205}
-  whipperCollider: {fileID: 1528251290450886707}
   localRotationAxis: {x: 0, y: 1, z: 0}
   rotationSpeed: 180
   playerLayer:
     serializedVersion: 2
     m_Bits: 128
-  pushForce: 30
   outwardForceRatio: 0.35
   maxPushSpeed: 12
   invertPushDirection: 0
@@ -217,7 +194,8 @@ GameObject:
   - component: {fileID: 4687444244822596189}
   - component: {fileID: 5318707956237864929}
   - component: {fileID: 8327913977317693182}
-  - component: {fileID: 1528251290450886707}
+  - component: {fileID: 560613838119689078}
+  - component: {fileID: 1005175824716739324}
   m_Layer: 0
   m_Name: the_whipper
   m_TagString: Untagged
@@ -312,7 +290,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -320,7 +298,34 @@ CapsuleCollider:
   m_Height: 2.5
   m_Direction: 0
   m_Center: {x: -1.75, y: 0, z: 0}
---- !u!114 &1528251290450886707
+--- !u!54 &560613838119689078
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6367480011149395895}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &1005175824716739324
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

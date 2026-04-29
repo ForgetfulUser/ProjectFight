@@ -8,10 +8,9 @@ public class Player : MonoBehaviour
     public PlayerPushComponent PlayerPushComponent;
     public int PlayerIndex = -1;
     [Header("Stats")]
-    public int CurrentHealth;
-    public int MaxHealth;
-    public int CurrentStamina;
-    public int MaxStamina;
+    public int CurrentLives;
+    public int MaxLives;
+    [Header("Reset Variables")]
     public Vector3 StartPos;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -26,8 +25,8 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     public virtual void UpdatePlayer()
     {
-        PlayerMovement.UpdateMovement(out Vector2 moveDir);
-        PlayerAnimationController.UpdateAnimation(moveDir);
+        PlayerMovement.UpdateMovement(out Vector2 moveDir, out bool isJumping);
+        PlayerAnimationController.UpdateAnimation(moveDir, isJumping);
         PlayerPushComponent.UpdatePushComponent(moveDir);
     }
 
@@ -39,6 +38,7 @@ public class Player : MonoBehaviour
     public virtual void ResetPlayer()
     {
         transform.localPosition = StartPos;
+        PlayerMovement.ResetMovement();
     }
 
     public virtual void TagPlayer()

@@ -1,6 +1,5 @@
-using UnityEditor.Purchasing;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
@@ -8,14 +7,11 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody rb;
 
     [Header("Move")]
+    public float extraGeneralGravity;
+    public float extraDecsentGravity;
     public float moveSpeed = 20;
     [HideInInspector] public Vector2 moveDir;
-
-    [Header("External Push")]
-    public float externalVelocityDecay = 10f;
-    public float maxExternalSpeed = 24f;
-
-    private Vector3 externalVelocity;
+    [SerializeField] private float maxForceCoolDown;
 
     [Header("Stun")]
     private float stunTimer;
@@ -23,8 +19,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Jump")]
     private bool canJump;
     public float jumpPower = 10;
-    public int maxJumps = 2;
-    int jumpsRemaining;
+    private bool isJumping;
 
     [Header("Ground Check")]
     public LayerMask groundLayer;
@@ -34,22 +29,24 @@ public class PlayerMovement : MonoBehaviour
     [Header("Fall Speed")]
     public float maxFallSpeed = 18;
 
+    private Coroutine appliedForceRoutine;
+
     public void StartMovement(bool canJump)
     {
+        
         this.canJump = canJump;
         rb = GetComponent<Rigidbody>();
-        jumpsRemaining = maxJumps;
-
-        externalVelocity = Vector3.zero;
         stunTimer = 0f;
     }
 
-    public void UpdateMovement(out Vector2 moveDir)
+    public void UpdateMovement(out Vector2 moveDir, out bool isJumping)
     {
         GroundCheck();
-        moveDir = this.moveDir;
-    }
 
+        moveDir = this.moveDir;
+        isJumping = false;// this.isJumping;
+    }
+    
     public void FixedUpdateMovement()
     {
         if (stunTimer > 0f)
@@ -57,80 +54,36 @@ public class PlayerMovement : MonoBehaviour
             stunTimer -= Time.fixedDeltaTime;
         }
 
-        Vector3 inputVelocity = Vector3.zero;
+        Vector3 force = Vector3.zero;
 
-        if (stunTimer <= 0f)
-        {
-            inputVelocity = new Vector3(
-                moveDir.x * moveSpeed,
+        if(stunTimer <= 0){
+            force = new Vector3(
+                moveDir.x * moveSpeed * Time.deltaTime,
                 0f,
-                moveDir.y * moveSpeed
+                moveDir.y * moveSpeed * Time.deltaTime
             );
         }
-
-        Vector3 finalHorizontalVelocity = inputVelocity + externalVelocity;
-
-        rb.linearVelocity = new Vector3(
-            finalHorizontalVelocity.x,
-            rb.linearVelocity.y,
-            finalHorizontalVelocity.z
-        );
-
-        externalVelocity = Vector3.MoveTowards(
-            externalVelocity,
-            Vector3.zero,
-            externalVelocityDecay * Time.fixedDeltaTime
-        );
-
-        LimitFallSpeed();
+        rb.MovePosition(transform.position + force);
+        ExtraGravity();
     }
 
-    public void AddExternalVelocity(Vector3 velocityChange)
+    public void ApplyForce(Vector3 force, float stunDuration, ForceMode forceMode)
     {
-        velocityChange.y = 0f;
-
-        externalVelocity += velocityChange;
-
-        Vector3 horizontalExternalVelocity = new Vector3(
-            externalVelocity.x,
-            0f,
-            externalVelocity.z
-        );
-
-        if (horizontalExternalVelocity.magnitude > maxExternalSpeed)
+        if(stunDuration > 0 && stunTimer <= 0)
         {
-            horizontalExternalVelocity = horizontalExternalVelocity.normalized * maxExternalSpeed;
-
-            externalVelocity = new Vector3(
-                horizontalExternalVelocity.x,
-                0f,
-                horizontalExternalVelocity.z
-            );
+            Stun(stunDuration);
         }
+
+        if (appliedForceRoutine != null) return;
+        rb.AddForce(force, forceMode);
+        appliedForceRoutine = StartCoroutine(ApplyForceRoutine());
     }
 
-    public void AddVerticalVelocity(float verticalVelocity)
+    private IEnumerator ApplyForceRoutine()
     {
-        if (rb == null)
-        {
-            return;
-        }
-
-        if (verticalVelocity <= 0f)
-        {
-            return;
-        }
-
-        rb.linearVelocity = new Vector3(
-            rb.linearVelocity.x,
-            Mathf.Max(rb.linearVelocity.y, verticalVelocity),
-            rb.linearVelocity.z
-        );
-    }
-
-    public void ClearExternalVelocity()
-    {
-        externalVelocity = Vector3.zero;
+        yield return new WaitForSeconds(maxForceCoolDown);
+        appliedForceRoutine = null;
+        rb.linearVelocity = Vector3.zero;
     }
 
     public void Stun(float duration)
@@ -148,11 +101,10 @@ public class PlayerMovement : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (stunTimer > 0f)
-        {
-            return;
-        }
-
+        if (stunTimer > 0f || isJumping) return;
+        isJumping = true;
+        rb.AddForce(new Vector3(0,jumpPower,0), ForceMode.Impulse);
+        /*
         if (jumpsRemaining > 0 && canJump)
         {
             if (context.performed)
@@ -176,6 +128,7 @@ public class PlayerMovement : MonoBehaviour
                 jumpsRemaining--;
             }
         }
+        */
     }
 
     private void GroundCheck()
@@ -192,10 +145,20 @@ public class PlayerMovement : MonoBehaviour
             groundLayer
         );
 
-        if (hits.Length > 0)
+        if (hits.Length > 0 && rb.linearVelocity.y <= 0)
         {
-            jumpsRemaining = maxJumps;
+            isJumping = false;
         }
+    }
+
+    private void ExtraGravity()
+    {
+        //if (rb.linearVelocity.y >= 0) return;
+        Vector3 velocity = rb.linearVelocity;
+        velocity.y -= extraGeneralGravity * Time.deltaTime;
+        if(velocity.y < 0) velocity.y -= extraDecsentGravity * Time.deltaTime;
+        rb.linearVelocity = velocity;
+        LimitFallSpeed();
     }
 
     private void LimitFallSpeed()
@@ -208,6 +171,17 @@ public class PlayerMovement : MonoBehaviour
                 rb.linearVelocity.z
             );
         }
+    }
+
+    public void ResetMovement()
+    {
+        if (appliedForceRoutine != null)
+        {
+            StopCoroutine(appliedForceRoutine);
+            appliedForceRoutine = null;
+        }
+        rb.linearVelocity = Vector3.zero;
+        stunTimer = -1;
     }
 
     private void OnDrawGizmosSelected()
