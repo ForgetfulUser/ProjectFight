@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
 
     [Header("Player Indicator")]
     public int PlayerIndex = -1;
-    public List<GameObject> PlayerDecals = new List<GameObject>();
+    //public List<GameObject> PlayerDecals = new List<GameObject>();
 
     [Header("Stats")]
     public int CurrentLives;
@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
     {
         PlayerMovement.StartMovement(canJump);
         PlayerIndex = playerIndex;
-        PlayerDecals[PlayerIndex].SetActive(true);
+        //PlayerDecals[PlayerIndex].SetActive(true);
         PlayerAnimationController.StartAnimation(PlayerIndex);
         StartPos = transform.localPosition;
     }
