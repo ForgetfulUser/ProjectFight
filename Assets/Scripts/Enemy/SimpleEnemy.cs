@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class SimpleEnemyAI : BaseHazard
 {
@@ -34,7 +36,15 @@ public class SimpleEnemyAI : BaseHazard
     public float globalSearchMoveSpeed = 2.5f;
     public float rangeSearchMoveSpeed = 4f;
     public float attackRange = 1.8f;
-    public bool lockYMovement = true;
+
+    [Header("NavMesh")]
+    public NavMeshAgent agent;
+    public float stoppingDistance = 1.5f;
+
+    [Header("NavMesh Link Jump")]
+    public bool useCustomLinkJump = true;
+    public float linkJumpHeight = 2.5f;
+    public float linkJumpDuration = 0.45f;
 
     [Header("Attack")]
     public float attackCooldown = 1f;
@@ -60,8 +70,10 @@ public class SimpleEnemyAI : BaseHazard
     [Header("Reset")]
     public bool resetToStartPosition = true;
 
+    [Header("Debug")]
+    public bool drawGizmos = true;
+
     private Transform target;
-    private Rigidbody rb;
     private EnemyState currentState;
 
     private Vector3 startPosition;
@@ -77,15 +89,25 @@ public class SimpleEnemyAI : BaseHazard
     private bool smoothUpwardApplied;
 
     private bool hasStarted;
+    private bool isTraversingLink;
 
     public override void StartHazard(HazardManager hazardManager)
     {
         base.StartHazard(hazardManager);
 
-        rb = GetComponent<Rigidbody>();
+        if (agent == null)
+        {
+            agent = GetComponent<NavMeshAgent>();
+        }
 
         startPosition = transform.position;
         startRotation = transform.rotation;
+
+        if (agent != null)
+        {
+            agent.stoppingDistance = stoppingDistance;
+            agent.autoTraverseOffMeshLink = false;
+        }
 
         hasStarted = true;
 
@@ -106,12 +128,28 @@ public class SimpleEnemyAI : BaseHazard
 
         UpdateSmoothPush();
 
+        if (agent == null || !agent.enabled || !agent.isOnNavMesh)
+        {
+            return;
+        }
+
+        if (useCustomLinkJump && agent.isOnOffMeshLink && !isTraversingLink)
+        {
+            StartCoroutine(TraverseLinkJump());
+            return;
+        }
+
+        if (isTraversingLink)
+        {
+            return;
+        }
+
         UpdateTarget();
 
         if (target == null)
         {
             currentState = EnemyState.Idle;
-            StopMoving();
+            StopAgent();
             return;
         }
 
@@ -125,24 +163,40 @@ public class SimpleEnemyAI : BaseHazard
         lastAttackTime = -999f;
         retargetTimer = 0f;
         target = null;
+        isTraversingLink = false;
 
         ClearSmoothPush();
-
-        if (resetToStartPosition)
-        {
-            transform.position = startPosition;
-            transform.rotation = startRotation;
-        }
-
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
 
         if (gameObject.activeSelf == false)
         {
             gameObject.SetActive(true);
+        }
+
+        if (agent == null)
+        {
+            agent = GetComponent<NavMeshAgent>();
+        }
+
+        if (resetToStartPosition)
+        {
+            if (agent != null && agent.enabled)
+            {
+                agent.Warp(startPosition);
+            }
+            else
+            {
+                transform.position = startPosition;
+            }
+
+            transform.rotation = startRotation;
+        }
+
+        if (agent != null && agent.enabled && agent.isOnNavMesh)
+        {
+            agent.ResetPath();
+            agent.isStopped = true;
+            agent.stoppingDistance = stoppingDistance;
+            agent.autoTraverseOffMeshLink = false;
         }
     }
 
@@ -157,10 +211,10 @@ public class SimpleEnemyAI : BaseHazard
         currentState = EnemyState.Disabled;
         ClearSmoothPush();
 
-        if (rb != null)
+        if (agent != null && agent.enabled && agent.isOnNavMesh)
         {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            agent.ResetPath();
+            agent.isStopped = true;
         }
 
         if (disableWhenBelowVoid)
@@ -219,12 +273,6 @@ public class SimpleEnemyAI : BaseHazard
             }
 
             Vector3 offset = player.transform.position - transform.position;
-
-            if (lockYMovement)
-            {
-                offset.y = 0f;
-            }
-
             float distanceSqr = offset.sqrMagnitude;
 
             if (distanceSqr < closestDistanceSqr)
@@ -252,11 +300,7 @@ public class SimpleEnemyAI : BaseHazard
             }
 
             Vector3 offset = player.transform.position - transform.position;
-
-            if (lockYMovement)
-            {
-                offset.y = 0f;
-            }
+            offset.y = 0f;
 
             float distanceSqr = offset.sqrMagnitude;
 
@@ -278,11 +322,7 @@ public class SimpleEnemyAI : BaseHazard
         }
 
         Vector3 offset = possibleTarget.position - transform.position;
-
-        if (lockYMovement)
-        {
-            offset.y = 0f;
-        }
+        offset.y = 0f;
 
         return offset.sqrMagnitude <= detectionRange * detectionRange;
     }
@@ -311,13 +351,13 @@ public class SimpleEnemyAI : BaseHazard
     {
         if (currentState == EnemyState.Disabled)
         {
-            StopMoving();
+            StopAgent();
             return;
         }
 
         if (currentState == EnemyState.Idle)
         {
-            StopMoving();
+            StopAgent();
         }
         else if (currentState == EnemyState.Chasing)
         {
@@ -325,43 +365,89 @@ public class SimpleEnemyAI : BaseHazard
         }
         else if (currentState == EnemyState.Attacking)
         {
-            StopMoving();
+            StopAgent();
             TryAttack();
         }
     }
 
     private void ChaseTarget()
     {
-        if (rb == null || target == null)
+        if (agent == null || target == null)
         {
             return;
         }
 
-        Vector3 direction = target.position - transform.position;
-
-        if (lockYMovement)
+        if (!agent.enabled || !agent.isOnNavMesh)
         {
-            direction.y = 0f;
-        }
-
-        if (direction.sqrMagnitude < 0.01f)
-        {
-            StopMoving();
             return;
         }
 
-        direction.Normalize();
+        agent.isStopped = false;
+        agent.speed = GetCurrentMoveSpeed();
+        agent.stoppingDistance = stoppingDistance;
+        agent.SetDestination(target.position);
+    }
 
-        float currentMoveSpeed = GetCurrentMoveSpeed();
-        Vector3 velocity = direction * currentMoveSpeed;
+    private void StopAgent()
+    {
+        if (agent == null)
+        {
+            return;
+        }
 
-        rb.linearVelocity = new Vector3(
-            velocity.x,
-            rb.linearVelocity.y,
-            velocity.z
-        );
+        if (!agent.enabled || !agent.isOnNavMesh)
+        {
+            return;
+        }
 
-        transform.forward = direction;
+        agent.isStopped = true;
+        agent.ResetPath();
+    }
+
+    private IEnumerator TraverseLinkJump()
+    {
+        if (agent == null)
+        {
+            yield break;
+        }
+
+        isTraversingLink = true;
+
+        OffMeshLinkData linkData = agent.currentOffMeshLinkData;
+
+        Vector3 startPos = transform.position;
+        Vector3 endPos = linkData.endPos;
+
+        float timer = 0f;
+
+        agent.isStopped = true;
+        agent.updatePosition = false;
+
+        while (timer < linkJumpDuration)
+        {
+            float t = timer / linkJumpDuration;
+
+            Vector3 flatPosition = Vector3.Lerp(startPos, endPos, t);
+            float arc = Mathf.Sin(t * Mathf.PI) * linkJumpHeight;
+
+            transform.position = new Vector3(
+                flatPosition.x,
+                flatPosition.y + arc,
+                flatPosition.z
+            );
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = endPos;
+
+        agent.updatePosition = true;
+        agent.Warp(endPos);
+        agent.CompleteOffMeshLink();
+
+        agent.isStopped = false;
+        isTraversingLink = false;
     }
 
     private float GetCurrentMoveSpeed()
@@ -382,27 +468,9 @@ public class SimpleEnemyAI : BaseHazard
         }
 
         Vector3 offset = target.position - transform.position;
-
-        if (lockYMovement)
-        {
-            offset.y = 0f;
-        }
+        offset.y = 0f;
 
         return offset.magnitude;
-    }
-
-    private void StopMoving()
-    {
-        if (rb == null)
-        {
-            return;
-        }
-
-        rb.linearVelocity = new Vector3(
-            0f,
-            rb.linearVelocity.y,
-            0f
-        );
     }
 
     private void TryAttack()
@@ -551,15 +619,17 @@ public class SimpleEnemyAI : BaseHazard
     private Vector3 GetPushDirection(Rigidbody targetRb)
     {
         Vector3 direction = targetRb.transform.position - transform.position;
+        direction.y = 0f;
 
-        if (lockYMovement)
+        if (direction.sqrMagnitude < 0.01f)
         {
+            direction = transform.forward;
             direction.y = 0f;
         }
 
         if (direction.sqrMagnitude < 0.01f)
         {
-            direction = transform.forward;
+            direction = Vector3.forward;
         }
 
         direction.Normalize();
@@ -569,6 +639,11 @@ public class SimpleEnemyAI : BaseHazard
 
     private void OnDrawGizmosSelected()
     {
+        if (!drawGizmos)
+        {
+            return;
+        }
+
         if (targetSearchMode == TargetSearchMode.RangeFastSearch)
         {
             Gizmos.color = Color.yellow;
