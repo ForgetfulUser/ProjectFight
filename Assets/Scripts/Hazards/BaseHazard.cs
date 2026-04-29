@@ -3,6 +3,9 @@ using UnityEngine;
 public class BaseHazard : MonoBehaviour
 {
     protected HazardManager hazardManager;
+    [Header("Force")]
+    public float forceAmount;
+    public float angleOfForce;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public virtual void StartHazard(HazardManager hazardManager)

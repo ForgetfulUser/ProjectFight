@@ -226,14 +226,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPushComponent
   PushBoxSize: {x: 1, y: 1, z: 0.4}
+  pushBoxForwardOffset: 1
   PlayerLayer:
     serializedVersion: 2
     m_Bits: 128
-  pushForce: 55
+  pushForce: 1000
+  upwardVelocity: 3
   maxPushSpeed: 26
   pushDuration: 0.45
   fadePushOverTime: 1
   stunTime: 0.18
+  showDebugLogs: 1
 --- !u!54 &1392176331117373401
 Rigidbody:
   m_ObjectHideFlags: 0

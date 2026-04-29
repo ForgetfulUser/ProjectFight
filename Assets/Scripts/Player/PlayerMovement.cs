@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEditor.Purchasing;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -24,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     private bool canJump;
     public float jumpPower = 10;
     public int maxJumps = 2;
+    private bool isJumping;
     int jumpsRemaining;
 
     [Header("Ground Check")]
@@ -49,7 +51,29 @@ public class PlayerMovement : MonoBehaviour
         GroundCheck();
         moveDir = this.moveDir;
     }
+    
+    public void FixedUpdateMovement()
+    {
+        Debug.Log("Moving");
+        if (stunTimer > 0f)
+        {
+            stunTimer -= Time.fixedDeltaTime;
+        }
 
+        Vector3 force = Vector3.zero;
+
+        if(stunTimer <= 0){
+            force = new Vector3(
+                moveDir.x * moveSpeed * Time.deltaTime,
+                0f,
+                moveDir.y * moveSpeed * Time.deltaTime
+            );
+        }
+        rb.MovePosition(transform.position + force);
+        //rb.AddForce(force);
+    }
+
+    /*
     public void FixedUpdateMovement()
     {
         if (stunTimer > 0f)
@@ -84,6 +108,7 @@ public class PlayerMovement : MonoBehaviour
 
         LimitFallSpeed();
     }
+    */
 
     public void AddExternalVelocity(Vector3 velocityChange)
     {
@@ -148,11 +173,9 @@ public class PlayerMovement : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (stunTimer > 0f)
-        {
-            return;
-        }
-
+        if (stunTimer > 0f) return;
+        isJumping = true;
+        /*
         if (jumpsRemaining > 0 && canJump)
         {
             if (context.performed)
@@ -176,6 +199,7 @@ public class PlayerMovement : MonoBehaviour
                 jumpsRemaining--;
             }
         }
+        */
     }
 
     private void GroundCheck()

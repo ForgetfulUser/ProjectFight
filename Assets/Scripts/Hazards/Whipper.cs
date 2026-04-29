@@ -60,19 +60,26 @@ public class Whipper : BaseHazard
         base.StartHazard(hazardManager);
 
         SaveStartTransform();
-        SetupWhipper();
         ResetHazard();
     }
 
-    public override void UpdateHazard()
+    private void OnCollisionEnter(Collision collision)
     {
-        RotateWhipper();
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Vector3 forceDir = GetWhipperPushDirection(collision.gameObject.GetComponent<Rigidbody>());
+            Debug.Log(forceDir * forceAmount + " on " + collision.gameObject.GetComponent<Rigidbody>());
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(forceDir * forceAmount, ForceMode.Impulse);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
     }
 
     public override void FixedUpdateHazard()
     {
-        // Empty for now.
-        // The Whipper uses UpdateHazard + coroutine push + PlayerMovement external velocity.
+        RotateWhipper();
     }
 
     public override void ResetHazard()
@@ -109,39 +116,6 @@ public class Whipper : BaseHazard
         }
     }
 
-    private void SetupWhipper()
-    {
-        if (rotatingPart_TRSFM == null)
-        {
-            Debug.LogWarning("Whipper needs rotatingPart_TRSFM assigned.", gameObject);
-            return;
-        }
-
-        if (whipperCollider == null)
-        {
-            whipperCollider = GetComponentInChildren<WhipperCollider>();
-        }
-
-        if (whipperCollider == null)
-        {
-            Debug.LogWarning("Whipper needs a WhipperCollider on the hitbox child object.", gameObject);
-            return;
-        }
-
-        whipperCollider.SetWhipper(this);
-
-        Collider hitboxCollider = whipperCollider.GetComponent<Collider>();
-
-        if (hitboxCollider != null)
-        {
-            hitboxCollider.isTrigger = true;
-        }
-        else
-        {
-            Debug.LogWarning("WhipperCollider object needs a Collider.", whipperCollider.gameObject);
-        }
-    }
-
     private void RotateWhipper()
     {
         if (rotatingPart_TRSFM == null)
@@ -155,15 +129,20 @@ public class Whipper : BaseHazard
         {
             axis = Vector3.up;
         }
+        float rotateInput = Input.GetAxis("Horizontal"); // -1 to 1
+        float rotationSpeed = 100f;
 
-        rotatingPart_TRSFM.Rotate(
-            axis.normalized * rotationSpeed * Time.deltaTime,
-            Space.Self
-        );
+        // Create a small rotation this frame
+        Quaternion deltaRotation = Quaternion.Euler(0f, rotateInput * rotationSpeed * Time.fixedDeltaTime, 0f);
+
+        // Apply it to current rotation
+        Rigidbody rb = rotatingPart_TRSFM.GetComponent<Rigidbody>();
+        rb.MoveRotation(rb.rotation * deltaRotation);
     }
 
     public void RegisterHit(Collider other)
     {
+        Debug.Log("Registerring");
         PlayerMovement playerMovement = other.GetComponentInParent<PlayerMovement>();
 
         if (playerMovement == null)

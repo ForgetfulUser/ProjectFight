@@ -97,8 +97,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce734e0cb038d254ca1b901194a7d95e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Whipper
+  forceAmount: 10
+  angleOfForce: 0
   rotatingPart_TRSFM: {fileID: 61532080748409205}
-  whipperCollider: {fileID: 1528251290450886707}
+  whipperCollider: {fileID: 0}
   localRotationAxis: {x: 0, y: 1, z: 0}
   rotationSpeed: 180
   playerLayer:
@@ -108,9 +110,11 @@ MonoBehaviour:
   outwardForceRatio: 0.35
   maxPushSpeed: 12
   invertPushDirection: 0
+  upwardVelocity: 4
+  applyUpwardOnlyOnNewHit: 1
   pushDuration: 0.45
   fadePushOverTime: 1
-  stunTime: 0.18
+  playerStunTime: 0.18
   resetWholeObjectTransform: 0
 --- !u!1 &5069394275945555312
 GameObject:
@@ -215,7 +219,6 @@ GameObject:
   - component: {fileID: 4687444244822596189}
   - component: {fileID: 5318707956237864929}
   - component: {fileID: 8327913977317693182}
-  - component: {fileID: 1528251290450886707}
   m_Layer: 0
   m_Name: the_whipper
   m_TagString: Untagged
@@ -310,7 +313,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -318,15 +321,3 @@ CapsuleCollider:
   m_Height: 2.5
   m_Direction: 0
   m_Center: {x: -1.75, y: 0, z: 0}
---- !u!114 &1528251290450886707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6367480011149395895}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3844335338d860e459cfba7bf4b9825b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WhipperCollider
