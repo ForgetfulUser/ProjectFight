@@ -41,7 +41,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2978750795001133532}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: cad6aa2766a3eaf498d016341517405c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -85,6 +85,11 @@ MonoBehaviour:
   outwardForceRatio: 0.35
   maxPushSpeed: 12
   invertPushDirection: 0
+  upwardVelocity: 4
+  applyUpwardOnlyOnNewHit: 1
+  pushDuration: 0.45
+  fadePushOverTime: 1
+  playerStunTime: 0.18
   resetWholeObjectTransform: 0
 --- !u!1 &5069394275945555312
 GameObject:

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7171137034699130818}
   - component: {fileID: 6609542440511250463}
   - component: {fileID: 7688540710742800457}
+  - component: {fileID: 719169355779176295}
   m_Layer: 0
   m_Name: Enemy prototype
   m_TagString: Untagged
@@ -53,16 +54,26 @@ MonoBehaviour:
   globalSearchMoveSpeed: 2.5
   rangeSearchMoveSpeed: 4
   attackRange: 1.8
-  lockYMovement: 1
+  agent: {fileID: 0}
+  stoppingDistance: 1.5
+  useCustomLinkJump: 1
+  linkJumpHeight: 2.5
+  linkJumpDuration: 0.45
   attackCooldown: 1
   pushMode: 1
-  pushForce: 8
-  upwardForce: 1.5
+  instantPushVelocity: 8
+  instantUpwardVelocity: 3
+  instantStunTime: 0.2
   smoothPushDuration: 0.25
   smoothPushForce: 35
-  smoothUpwardForce: 1
+  smoothUpwardVelocity: 3
+  smoothStunTime: 0.12
   maxPushSpeed: 10
+  resetWhenBelowVoid: 1
+  disableWhenBelowVoid: 0
+  voidY: -10
   resetToStartPosition: 1
+  drawGizmos: 1
 --- !u!54 &7688540710742800457
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -90,6 +101,28 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!195 &719169355779176295
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3939846030930367006}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &7324716580931588127
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,7 +151,7 @@ Transform:
   m_GameObject: {fileID: 7324716580931588127}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
