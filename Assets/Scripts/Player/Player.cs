@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -6,10 +6,15 @@ public class Player : MonoBehaviour
     public PlayerMovement PlayerMovement;
     public PlayerAnimationController PlayerAnimationController;
     public PlayerPushComponent PlayerPushComponent;
+
+    [Header("Player Indicator")]
     public int PlayerIndex = -1;
+    public List<GameObject> PlayerDecals = new List<GameObject>();
+
     [Header("Stats")]
     public int CurrentLives;
     public int MaxLives;
+
     [Header("Reset Variables")]
     public Vector3 StartPos;
 
@@ -18,6 +23,7 @@ public class Player : MonoBehaviour
     {
         PlayerMovement.StartMovement(canJump);
         PlayerIndex = playerIndex;
+        PlayerDecals[PlayerIndex].SetActive(true);
         PlayerAnimationController.StartAnimation(PlayerIndex);
         StartPos = transform.localPosition;
     }
