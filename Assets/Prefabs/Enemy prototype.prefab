@@ -47,6 +47,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92d907badea8f66458a1727783b21ab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleEnemyAI
+  doesApplyForce: 1
+  forceMode: 1
+  forceAmount: 15
+  angleOfForce: 0.25
+  upwardForceMultiplier: 1
+  forceCooldown: 0.5
+  stunDuration: 0.15
   targetSearchMode: 1
   playerTag: Player
   retargetInterval: 0.25
@@ -59,20 +66,11 @@ MonoBehaviour:
   useCustomLinkJump: 1
   linkJumpHeight: 2.5
   linkJumpDuration: 0.45
-  attackCooldown: 1
-  pushMode: 1
-  instantPushVelocity: 8
-  instantUpwardVelocity: 3
-  instantStunTime: 0.2
-  smoothPushDuration: 0.25
-  smoothPushForce: 35
-  smoothUpwardVelocity: 3
-  smoothStunTime: 0.12
-  maxPushSpeed: 10
   resetWhenBelowVoid: 1
   disableWhenBelowVoid: 0
   voidY: -10
   resetToStartPosition: 1
+  showDebugLogs: 0
   drawGizmos: 1
 --- !u!54 &7688540710742800457
 Rigidbody:

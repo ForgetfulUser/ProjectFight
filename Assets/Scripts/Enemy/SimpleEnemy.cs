@@ -10,12 +10,6 @@ public class SimpleEnemyAI : BaseHazard
         RangeFastSearch
     }
 
-    public enum PushMode
-    {
-        InstantImpulse,
-        SmoothPush
-    }
-
     private enum EnemyState
     {
         Idle,
@@ -46,22 +40,6 @@ public class SimpleEnemyAI : BaseHazard
     public float linkJumpHeight = 2.5f;
     public float linkJumpDuration = 0.45f;
 
-    [Header("Attack")]
-    public float attackCooldown = 1f;
-    public PushMode pushMode = PushMode.SmoothPush;
-
-    [Header("Instant Push")]
-    public float instantPushVelocity = 8f;
-    public float instantUpwardVelocity = 3f;
-    public float instantStunTime = 0.2f;
-
-    [Header("Smooth Push")]
-    public float smoothPushDuration = 0.25f;
-    public float smoothPushForce = 35f;
-    public float smoothUpwardVelocity = 3f;
-    public float smoothStunTime = 0.12f;
-    public float maxPushSpeed = 10f;
-
     [Header("Void / Out Of Bounds")]
     public bool resetWhenBelowVoid = true;
     public bool disableWhenBelowVoid = false;
@@ -71,6 +49,7 @@ public class SimpleEnemyAI : BaseHazard
     public bool resetToStartPosition = true;
 
     [Header("Debug")]
+    public bool showDebugLogs = false;
     public bool drawGizmos = true;
 
     private Transform target;
@@ -81,12 +60,6 @@ public class SimpleEnemyAI : BaseHazard
 
     private float lastAttackTime = -999f;
     private float retargetTimer;
-
-    private Rigidbody pushedRb;
-    private PlayerMovement pushedPlayerMovement;
-    private Vector3 smoothPushDirection;
-    private float smoothPushTimer;
-    private bool smoothUpwardApplied;
 
     private bool hasStarted;
     private bool isTraversingLink;
@@ -126,8 +99,6 @@ public class SimpleEnemyAI : BaseHazard
             return;
         }
 
-        UpdateSmoothPush();
-
         if (agent == null || !agent.enabled || !agent.isOnNavMesh)
         {
             return;
@@ -164,8 +135,6 @@ public class SimpleEnemyAI : BaseHazard
         retargetTimer = 0f;
         target = null;
         isTraversingLink = false;
-
-        ClearSmoothPush();
 
         if (gameObject.activeSelf == false)
         {
@@ -209,7 +178,6 @@ public class SimpleEnemyAI : BaseHazard
 
         target = null;
         currentState = EnemyState.Disabled;
-        ClearSmoothPush();
 
         if (agent != null && agent.enabled && agent.isOnNavMesh)
         {
@@ -485,140 +453,35 @@ public class SimpleEnemyAI : BaseHazard
             return;
         }
 
-        if (Time.time < lastAttackTime + attackCooldown)
+        if (Time.time < lastAttackTime + forceCooldown)
         {
             return;
         }
 
-        Rigidbody targetRb = target.GetComponentInParent<Rigidbody>();
         PlayerMovement targetPlayerMovement = target.GetComponentInParent<PlayerMovement>();
 
-        if (targetRb != null && targetPlayerMovement != null)
+        if (targetPlayerMovement == null)
         {
-            if (pushMode == PushMode.InstantImpulse)
+            return;
+        }
+
+        if (doesApplyForce)
+        {
+            Vector3 force = BuildForceToPlayer(targetPlayerMovement);
+            HitPlayer(targetPlayerMovement, force);
+
+            if (showDebugLogs)
             {
-                ApplyInstantPush(targetRb, targetPlayerMovement);
-            }
-            else
-            {
-                StartSmoothPush(targetRb, targetPlayerMovement);
+                Debug.Log("Enemy hit player with force: " + force);
             }
         }
 
         lastAttackTime = Time.time;
     }
 
-    private void ApplyInstantPush(Rigidbody targetRb, PlayerMovement targetPlayerMovement)
+    private Vector3 BuildForceToPlayer(PlayerMovement playerMovement)
     {
-        Vector3 direction = GetPushDirection(targetRb);
-
-        Vector3 velocityChange = direction * instantPushVelocity;
-
-        //targetPlayerMovement.AddExternalVelocity(velocityChange);
-
-        if (instantUpwardVelocity > 0f)
-        {
-            //targetPlayerMovement.AddVerticalVelocity(instantUpwardVelocity);
-        }
-
-        if (instantStunTime > 0f)
-        {
-            targetPlayerMovement.Stun(instantStunTime);
-        }
-    }
-
-    private void StartSmoothPush(Rigidbody targetRb, PlayerMovement targetPlayerMovement)
-    {
-        pushedRb = targetRb;
-        pushedPlayerMovement = targetPlayerMovement;
-        smoothPushDirection = GetPushDirection(targetRb);
-        smoothPushTimer = smoothPushDuration;
-        smoothUpwardApplied = false;
-
-        ApplySmoothUpwardOnce();
-    }
-
-    private void UpdateSmoothPush()
-    {
-        if (pushMode != PushMode.SmoothPush)
-        {
-            return;
-        }
-
-        if (pushedRb == null || pushedPlayerMovement == null)
-        {
-            return;
-        }
-
-        if (transform.position.y < voidY)
-        {
-            ClearSmoothPush();
-            return;
-        }
-
-        if (smoothPushTimer <= 0f)
-        {
-            ClearSmoothPush();
-            return;
-        }
-
-        smoothPushTimer -= Time.deltaTime;
-
-        Vector3 horizontalVelocity = new Vector3(
-            pushedRb.linearVelocity.x,
-            0f,
-            pushedRb.linearVelocity.z
-        );
-
-        float speedInPushDirection = Vector3.Dot(horizontalVelocity, smoothPushDirection);
-
-        if (speedInPushDirection < maxPushSpeed)
-        {
-            Vector3 velocityChange =
-                smoothPushDirection * smoothPushForce * Time.deltaTime;
-
-            //pushedPlayerMovement.AddExternalVelocity(velocityChange);
-        }
-
-        if (smoothStunTime > 0f)
-        {
-            pushedPlayerMovement.Stun(smoothStunTime);
-        }
-    }
-
-    private void ApplySmoothUpwardOnce()
-    {
-        if (smoothUpwardApplied)
-        {
-            return;
-        }
-
-        if (pushedPlayerMovement == null)
-        {
-            return;
-        }
-
-        if (smoothUpwardVelocity <= 0f)
-        {
-            return;
-        }
-
-        //pushedPlayerMovement.AddVerticalVelocity(smoothUpwardVelocity);
-        smoothUpwardApplied = true;
-    }
-
-    private void ClearSmoothPush()
-    {
-        pushedRb = null;
-        pushedPlayerMovement = null;
-        smoothPushDirection = Vector3.zero;
-        smoothPushTimer = 0f;
-        smoothUpwardApplied = false;
-    }
-
-    private Vector3 GetPushDirection(Rigidbody targetRb)
-    {
-        Vector3 direction = targetRb.transform.position - transform.position;
+        Vector3 direction = playerMovement.transform.position - transform.position;
         direction.y = 0f;
 
         if (direction.sqrMagnitude < 0.01f)
@@ -634,7 +497,12 @@ public class SimpleEnemyAI : BaseHazard
 
         direction.Normalize();
 
-        return direction;
+        float clampedAngle = Mathf.Clamp01(angleOfForce);
+
+        Vector3 horizontalForce = direction * forceAmount;
+        Vector3 upwardForce = Vector3.up * forceAmount * clampedAngle * upwardForceMultiplier;
+
+        return horizontalForce + upwardForce;
     }
 
     private void OnDrawGizmosSelected()
