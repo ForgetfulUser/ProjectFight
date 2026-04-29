@@ -1,16 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.XR;
-using static UnityEngine.GraphicsBuffer;
 
 public class PlayerPushComponent : MonoBehaviour
 {
     [Header("Push Force")]
     public float pushForce = 55f;
     public float upwardVelocity = 3f;
-    public float maxPushSpeed = 26f;
     private Vector3 pushDirection;
 
     [Header("Push Detection")]
@@ -19,31 +15,10 @@ public class PlayerPushComponent : MonoBehaviour
     public LayerMask PlayerLayer;
     private bool tryPush;
 
-    [Header("After-Hit Coroutine Push")]
-    public float pushDuration = 0.45f;
-    public bool fadePushOverTime = true;
     public float stunTime = 0.18f;
-
-    [Header("Debug")]
-    public bool showDebugLogs = true;
-
-    private readonly Dictionary<PlayerMovement, Whipper.PushInfo> activePushes =
-        new Dictionary<PlayerMovement, Whipper.PushInfo>();
-
-    private PlayerMovement ownerPlayerMovement;
-
-    private void Awake()
-    {
-        ownerPlayerMovement = GetComponentInParent<PlayerMovement>();
-    }
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (showDebugLogs)
-        {
-            Debug.Log("Attack");
-        }
-
         tryPush = context.performed;
 
         if (tryPush == false)
@@ -57,11 +32,6 @@ public class PlayerPushComponent : MonoBehaviour
         if (tryPush == false) return;
 
         tryPush = false;
-
-        if (showDebugLogs)
-        {
-            Debug.Log("Try Push");
-        }
 
         pushDirection = GetPushDirection(moveDir);
 
@@ -79,8 +49,7 @@ public class PlayerPushComponent : MonoBehaviour
         {
             // Calculate direction away from this object
             if(hit.gameObject == gameObject) continue;
-            hit.attachedRigidbody.AddForce(pushDirection * Time.deltaTime * pushForce, ForceMode.Impulse);
-            //RegisterHit(hit);
+            hit.GetComponent<PlayerMovement>().ApplyForce(pushDirection * pushForce, 0, ForceMode.Impulse);
         }
     }
 
@@ -105,24 +74,6 @@ public class PlayerPushComponent : MonoBehaviour
 
         direction.Normalize();
         return direction;
-    }
-
-    private void StopAllPushes()
-    {
-        foreach (KeyValuePair<PlayerMovement, Whipper.PushInfo> pair in activePushes)
-        {
-            if (pair.Value != null && pair.Value.coroutine != null)
-            {
-                StopCoroutine(pair.Value.coroutine);
-            }
-        }
-
-        activePushes.Clear();
-    }
-
-    private void OnDisable()
-    {
-        StopAllPushes();
     }
 
     private void OnDrawGizmosSelected()
