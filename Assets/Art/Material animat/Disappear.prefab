@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 7077048518447195802}
   - component: {fileID: 5664509278197743281}
   - component: {fileID: 7949183325336050808}
-  m_Layer: 0
-  m_Name: Cube test
+  m_Layer: 6
+  m_Name: Disappear
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -219,6 +219,10 @@ PrefabInstance:
     - target: {fileID: 7924940180595372513, guid: 0e826e1dedcc0d24e90656841e222c95, type: 3}
       propertyPath: m_Name
       value: Particle System (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7924940180595372513, guid: 0e826e1dedcc0d24e90656841e222c95, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

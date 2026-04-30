@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class DisappearingFloorHazard : BaseHazard
@@ -14,6 +15,7 @@ public class DisappearingFloorHazard : BaseHazard
         WaitingForPressure,
         PressureDelay,
         Warning,
+        Disappearing,
         Hidden
     }
 
@@ -26,33 +28,61 @@ public class DisappearingFloorHazard : BaseHazard
     public float warningTime = 1f;
     public float hiddenTime = 2f;
 
+    [Header("Animation")]
+    public bool useDisappearAnimation = true;
+    public Animator floorAnimator;
+    public string disappearTriggerName = "Disappear";
+    public string disappearStateName = "Disappear";
+    public string idleStateName = "Idle";
+
+    [Header("Warning Pulse")]
+    public bool useWarningPulse = true;
+    public float warningPulseAmount = 0.08f;
+    public float warningPulseSpeed = 8f;
+
     [Header("Pressure Check")]
     public LayerMask pressureLayer;
-    public Vector3 pressureCheckOffset = new Vector3(0f, 0.4f, 0f);
-    public Vector3 pressureCheckHalfSize = new Vector3(1f, 0.3f, 1f);
+    public Vector3 pressureCheckOffset = new Vector3(0f, 0.8f, 0f);
+    public Vector3 pressureCheckHalfSize = new Vector3(1f, 1f, 1f);
 
-    [Header("Visual")]
-    public Color normalColor = Color.white;
-    public Color warningColor = Color.red;
-    public Material lavaMaterial;
+    [Header("References")]
+    [SerializeField] private Transform visualRender_TRSFM;
+    [SerializeField] private Collider floorCollider;
 
-    [SerializeField] Transform visualRender_TRSFM;
-
-    private Renderer visualRenderer;
     private float timer;
     private HazardState state;
+    private Coroutine disappearRoutine;
+
+    private Vector3 visualStartLocalScale;
+    private bool hasSavedVisualStartScale;
 
     public override void StartHazard(HazardManager hazardManager)
     {
         base.StartHazard(hazardManager);
 
-        if (visualRender_TRSFM != null)
+        if (floorAnimator == null && visualRender_TRSFM != null)
         {
-            visualRenderer = visualRender_TRSFM.GetComponent<Renderer>();
-            lavaMaterial = visualRenderer.material;
+            floorAnimator = visualRender_TRSFM.GetComponent<Animator>();
         }
 
-        ResetHazard();
+        if (floorCollider == null)
+        {
+            floorCollider = GetComponent<Collider>();
+        }
+
+        SaveVisualStartValues();
+        RestoreTile();
+
+        if (triggerMode == TriggerMode.Timer)
+        {
+            state = HazardState.Active;
+            timer = activeTime;
+        }
+        else
+        {
+            state = HazardState.WaitingForPressure;
+            timer = 0f;
+        }
     }
 
     public override void UpdateHazard()
@@ -69,6 +99,12 @@ public class DisappearingFloorHazard : BaseHazard
 
     public override void ResetHazard()
     {
+        if (disappearRoutine != null)
+        {
+            StopCoroutine(disappearRoutine);
+            disappearRoutine = null;
+        }
+
         RestoreTile();
 
         if (triggerMode == TriggerMode.Timer)
@@ -97,11 +133,11 @@ public class DisappearingFloorHazard : BaseHazard
         else if (state == HazardState.Warning)
         {
             timer -= Time.deltaTime;
-            FlashWarning();
+            UpdateWarningPulse();
 
             if (timer <= 0f)
             {
-                HideTile();
+                StartDisappearAnimation();
             }
         }
         else if (state == HazardState.Hidden)
@@ -110,7 +146,10 @@ public class DisappearingFloorHazard : BaseHazard
 
             if (timer <= 0f)
             {
-                ResetHazard();
+                RestoreTile();
+
+                state = HazardState.Active;
+                timer = activeTime;
             }
         }
     }
@@ -119,7 +158,7 @@ public class DisappearingFloorHazard : BaseHazard
     {
         if (state == HazardState.WaitingForPressure)
         {
-            SetTileColor(normalColor);
+            ResetWarningPulse();
 
             if (IsPressureDetected())
             {
@@ -138,11 +177,11 @@ public class DisappearingFloorHazard : BaseHazard
         else if (state == HazardState.Warning)
         {
             timer -= Time.deltaTime;
-            FlashWarning();
+            UpdateWarningPulse();
 
             if (timer <= 0f)
             {
-                HideTile();
+                StartDisappearAnimation();
             }
         }
         else if (state == HazardState.Hidden)
@@ -151,7 +190,10 @@ public class DisappearingFloorHazard : BaseHazard
 
             if (timer <= 0f)
             {
-                ResetHazard();
+                RestoreTile();
+
+                state = HazardState.WaitingForPressure;
+                timer = 0f;
             }
         }
     }
@@ -160,19 +202,91 @@ public class DisappearingFloorHazard : BaseHazard
     {
         state = HazardState.PressureDelay;
         timer = pressureDelayTime;
-        SetTileColor(normalColor);
+        ResetWarningPulse();
     }
 
     private void StartWarning()
     {
         state = HazardState.Warning;
         timer = warningTime;
+
+        if (warningTime <= 0f)
+        {
+            StartDisappearAnimation();
+        }
     }
 
-    private void HideTile()
+    private void StartDisappearAnimation()
+    {
+        if (state == HazardState.Disappearing)
+        {
+            return;
+        }
+
+        state = HazardState.Disappearing;
+
+        ResetWarningPulse();
+
+        if (disappearRoutine != null)
+        {
+            StopCoroutine(disappearRoutine);
+        }
+
+        disappearRoutine = StartCoroutine(DisappearRoutine());
+    }
+
+    private IEnumerator DisappearRoutine()
+    {
+        if (useDisappearAnimation && floorAnimator != null)
+        {
+            floorAnimator.ResetTrigger(disappearTriggerName);
+            floorAnimator.SetTrigger(disappearTriggerName);
+
+            yield return null;
+
+            while (!IsAnimatorInState(disappearStateName))
+            {
+                yield return null;
+            }
+
+            while (IsAnimatorInState(disappearStateName))
+            {
+                AnimatorStateInfo stateInfo = floorAnimator.GetCurrentAnimatorStateInfo(0);
+
+                if (stateInfo.normalizedTime >= 1f && !floorAnimator.IsInTransition(0))
+                {
+                    break;
+                }
+
+                yield return null;
+            }
+        }
+
+        HideTileImmediately();
+
+        disappearRoutine = null;
+    }
+
+    private bool IsAnimatorInState(string stateName)
+    {
+        if (floorAnimator == null)
+        {
+            return false;
+        }
+
+        AnimatorStateInfo stateInfo = floorAnimator.GetCurrentAnimatorStateInfo(0);
+        return stateInfo.IsName(stateName);
+    }
+
+    private void HideTileImmediately()
     {
         state = HazardState.Hidden;
         timer = hiddenTime;
+
+        if (floorCollider != null)
+        {
+            floorCollider.enabled = false;
+        }
 
         SetTileVisible(false);
     }
@@ -180,7 +294,65 @@ public class DisappearingFloorHazard : BaseHazard
     private void RestoreTile()
     {
         SetTileVisible(true);
-        SetTileColor(normalColor);
+
+        if (floorCollider != null)
+        {
+            floorCollider.enabled = true;
+        }
+
+        if (floorAnimator != null && !string.IsNullOrEmpty(idleStateName))
+        {
+            floorAnimator.Play(idleStateName, 0, 0f);
+        }
+
+        ResetWarningPulse();
+    }
+
+    private void SaveVisualStartValues()
+    {
+        if (visualRender_TRSFM == null)
+        {
+            return;
+        }
+
+        visualStartLocalScale = visualRender_TRSFM.localScale;
+        hasSavedVisualStartScale = true;
+    }
+
+    private void UpdateWarningPulse()
+    {
+        if (!useWarningPulse)
+        {
+            return;
+        }
+
+        if (visualRender_TRSFM == null)
+        {
+            return;
+        }
+
+        if (!hasSavedVisualStartScale)
+        {
+            SaveVisualStartValues();
+        }
+
+        float pulse = 1f + Mathf.Sin(Time.time * warningPulseSpeed) * warningPulseAmount;
+        visualRender_TRSFM.localScale = visualStartLocalScale * pulse;
+    }
+
+    private void ResetWarningPulse()
+    {
+        if (visualRender_TRSFM == null)
+        {
+            return;
+        }
+
+        if (!hasSavedVisualStartScale)
+        {
+            SaveVisualStartValues();
+        }
+
+        visualRender_TRSFM.localScale = visualStartLocalScale;
     }
 
     private bool IsPressureDetected()
@@ -190,11 +362,27 @@ public class DisappearingFloorHazard : BaseHazard
         Collider[] hits = Physics.OverlapBox(
             checkCenter,
             pressureCheckHalfSize,
-            Quaternion.identity,
-            pressureLayer
+            transform.rotation,
+            pressureLayer,
+            QueryTriggerInteraction.Collide
         );
 
-        return hits.Length > 0;
+        foreach (Collider hit in hits)
+        {
+            if (hit == null)
+            {
+                continue;
+            }
+
+            PlayerMovement playerMovement = hit.GetComponentInParent<PlayerMovement>();
+
+            if (playerMovement != null)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void SetTileVisible(bool visible)
@@ -205,29 +393,20 @@ public class DisappearingFloorHazard : BaseHazard
         }
     }
 
-    private void SetTileColor(Color color)
-    {
-        if (visualRenderer != null)
-        {
-            visualRenderer.material.color = color;
-        }
-    }
-
-    private void FlashWarning()
-    {
-        if (visualRenderer == null)
-        {
-            return;
-        }
-
-        float flash = Mathf.PingPong(Time.time * 6f, 1f);
-        lavaMaterial.SetFloat("_Blend", flash);
-        //visualRenderer.material.color = Color.Lerp(normalColor, warningColor, flash);
-    }
-
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(transform.position + pressureCheckOffset, pressureCheckHalfSize * 2f);
+
+        Matrix4x4 oldMatrix = Gizmos.matrix;
+
+        Gizmos.matrix = Matrix4x4.TRS(
+            transform.position + pressureCheckOffset,
+            transform.rotation,
+            Vector3.one
+        );
+
+        Gizmos.DrawWireCube(Vector3.zero, pressureCheckHalfSize * 2f);
+
+        Gizmos.matrix = oldMatrix;
     }
 }
