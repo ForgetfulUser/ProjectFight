@@ -532,9 +532,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7987110059570882016, guid: 0f084030525061a4d9d6ead0cb0bb6e6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2054586981}
-    - targetCorrespondingSourceObject: {fileID: 7987110059570882016, guid: 0f084030525061a4d9d6ead0cb0bb6e6, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 351932281}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0f084030525061a4d9d6ead0cb0bb6e6, type: 3}
 --- !u!4 &149566629 stripped
@@ -1078,7 +1075,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1415324975}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &512358268 stripped
 Transform:
@@ -1566,7 +1563,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1415324975}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1063143613
 GameObject:
@@ -1597,7 +1594,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1415324975}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1079012621
 GameObject:
@@ -1942,11 +1939,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a939c37acc87ef40b475efd02c63904, type: 3}
---- !u!4 &1415324975 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7987110059570882016, guid: 0f084030525061a4d9d6ead0cb0bb6e6, type: 3}
-  m_PrefabInstance: {fileID: 149566628}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1421755257
 GameObject:
   m_ObjectHideFlags: 0
@@ -2090,7 +2082,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2978750795001133532, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4442544091631092807, guid: a4ead16d1f132d345b99410964fabe25, type: 3}
       propertyPath: m_LocalScale.x
@@ -2981,3 +2973,6 @@ SceneRoots:
   - {fileID: 1079012622}
   - {fileID: 88843042}
   - {fileID: 175991903}
+  - {fileID: 497051967}
+  - {fileID: 1027036518}
+  - {fileID: 1063143614}
