@@ -212,6 +212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationController
   Animator: {fileID: 8692551883824260078}
+  SpriteRenderer: {fileID: 1423162640616817176}
 --- !u!114 &2203776891576585838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -339,6 +340,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 7587992384834621376}
+        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
+        m_MethodName: Attack
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 6c2ab1b8-8984-453a-af3d-a3c78ae1679a
     m_ActionName: 'Player/Attack[/Mouse/leftButton,/Keyboard/enter]'
   - m_PersistentCalls:
@@ -437,9 +450,7 @@ MonoBehaviour:
   currentState: 0
   infectCooldownAfterTurning: 1
   canInfectImmediately: 0
-  humanIndicator: {fileID: 2659039408157641319, guid: 94f1305a74348e043a1100f48460adbf, type: 3}
-  infectedIndicator: {fileID: 0}
-  winnerIndicator: {fileID: 0}
+  showDebugLogs: 0
 --- !u!1 &9054126846395472459
 GameObject:
   m_ObjectHideFlags: 0

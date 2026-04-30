@@ -29,7 +29,7 @@ public class TestPlayerMovementRunner : MonoBehaviour
         }
 
         Vector2 currentMoveDir;
-        playerMovement.UpdateMovement(out currentMoveDir, out bool isJumping);
+        playerMovement.UpdateMovement(out currentMoveDir, out bool isJumping, out bool isPunhing);
     }
 
     private void FixedUpdate()

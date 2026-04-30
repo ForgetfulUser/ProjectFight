@@ -5,13 +5,14 @@ public class PlayerAnimationController : MonoBehaviour
 {
     public Animator Animator;
     private Sprite jumpSprite;
+    public SpriteRenderer SpriteRenderer;
     private bool lastJumpVal;
     public void StartAnimation(int playerIndex)
     {
         GameObject decal = null;
         switch (playerIndex)
         {
-            case 0:
+            default:
                 Animator.SetBool("Is Player One", true);
                 decal = Resources.Load<GameObject>("Decals/P1 Blob");
                 break;
@@ -29,22 +30,23 @@ public class PlayerAnimationController : MonoBehaviour
                 break;
         }
 
-        if (decal != null)
+        if (decal != null && playerIndex >= 0 && playerIndex < 4)
         {
             decal = Instantiate(decal, transform);
         }
         else
         {
-            Debug.LogError("Player Index: " + playerIndex + " is out of range.");
+            Debug.LogWarning("Player Index: " + playerIndex + " is out of range.");
         }
     }
 
-    public void UpdateAnimation(Vector2 moveDir, bool isJumping)
+    public void UpdateAnimation(Vector2 moveDir, bool isJumping, bool isPunching)
     {
         Animator.SetInteger("Horizontal Movement", Mathf.RoundToInt(moveDir.x));
         Animator.SetInteger("Vertical Movement", Mathf.RoundToInt(moveDir.y));
-
-        if(isJumping != lastJumpVal) ToggleJump();
+        Animator.SetBool("Is Punching", isPunching);
+        SpriteRenderer.flipX = (isPunching && moveDir.x > 0);
+        //if(isJumping != lastJumpVal) ToggleJump();
     }
 
     private void ToggleJump()

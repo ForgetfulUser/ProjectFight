@@ -30,6 +30,8 @@ public class PlayerMovement : MonoBehaviour
     public float maxFallSpeed = 18;
 
     private Coroutine appliedForceRoutine;
+    private Coroutine punchingCoroutine;
+    private bool isPunching;
 
     public void StartMovement(bool canJump)
     {
@@ -39,12 +41,13 @@ public class PlayerMovement : MonoBehaviour
         stunTimer = 0f;
     }
 
-    public void UpdateMovement(out Vector2 moveDir, out bool isJumping)
+    public void UpdateMovement(out Vector2 moveDir, out bool isJumping, out bool isPunching)
     {
         GroundCheck();
 
         moveDir = this.moveDir;
-        isJumping = false;// this.isJumping;
+        isJumping = false;
+        isPunching = this.isPunching;
     }
     
     public void FixedUpdateMovement()
@@ -86,6 +89,14 @@ public class PlayerMovement : MonoBehaviour
         rb.linearVelocity = Vector3.zero;
     }
 
+    private IEnumerator PunchingCoroutine()
+    {
+        isPunching = true;
+        yield return new WaitForSeconds(.6f);
+        isPunching = false;
+        punchingCoroutine = null;
+    }
+
     public void Stun(float duration)
     {
         if (duration > stunTimer)
@@ -97,6 +108,13 @@ public class PlayerMovement : MonoBehaviour
     public void Move(InputAction.CallbackContext context)
     {
         moveDir = context.ReadValue<Vector2>();
+    }
+
+    public void Attack(InputAction.CallbackContext context)
+    {
+        if(context.canceled) return;
+        Debug.Log("Punching");
+        if (punchingCoroutine == null) { punchingCoroutine = StartCoroutine(PunchingCoroutine()); Debug.Log("Punch Started"); }
     }
 
     public void Jump(InputAction.CallbackContext context)

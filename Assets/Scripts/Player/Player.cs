@@ -23,7 +23,6 @@ public class Player : MonoBehaviour
     {
         PlayerMovement.StartMovement(canJump);
         PlayerIndex = playerIndex;
-        //PlayerDecals[PlayerIndex].SetActive(true);
         PlayerAnimationController.StartAnimation(PlayerIndex);
         StartPos = transform.localPosition;
     }
@@ -31,9 +30,9 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     public virtual void UpdatePlayer()
     {
-        PlayerMovement.UpdateMovement(out Vector2 moveDir, out bool isJumping);
-        PlayerAnimationController.UpdateAnimation(moveDir, isJumping);
+        PlayerMovement.UpdateMovement(out Vector2 moveDir, out bool isJumping, out bool isPunching);
         PlayerPushComponent.UpdatePushComponent(moveDir);
+        PlayerAnimationController.UpdateAnimation(moveDir, isJumping, isPunching);
     }
 
     public virtual void FixedUpdatePlayer()
