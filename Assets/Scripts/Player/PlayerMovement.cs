@@ -1,10 +1,13 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Components")]
     public Rigidbody rb;
+    public Animator animator;
 
     [Header("Move")]
     public float extraGeneralGravity;
@@ -92,7 +95,7 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator PunchingCoroutine()
     {
         isPunching = true;
-        yield return new WaitForSeconds(.6f);
+        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
         isPunching = false;
         punchingCoroutine = null;
     }

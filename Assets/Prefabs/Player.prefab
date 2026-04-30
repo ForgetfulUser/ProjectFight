@@ -187,6 +187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   rb: {fileID: 1392176331117373401}
+  animator: {fileID: 8692551883824260078}
   extraGeneralGravity: 4
   extraDecsentGravity: 2
   moveSpeed: 10
