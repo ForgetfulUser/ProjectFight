@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 1392176331117373401}
   - component: {fileID: 7914208197252688345}
   - component: {fileID: 2913404083196610203}
+  - component: {fileID: -8921247011287224608}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -210,7 +211,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54601cfc23771bf49a45763ce003e2d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationController
-  SpriteRenderer: {fileID: 1423162640616817176}
   Animator: {fileID: 8692551883824260078}
 --- !u!114 &2203776891576585838
 MonoBehaviour:
@@ -422,6 +422,24 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &-8921247011287224608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8074889265827031309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2918eb8b542893a4ba8806e328c7803a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInfection
+  currentState: 0
+  infectCooldownAfterTurning: 1
+  canInfectImmediately: 0
+  humanIndicator: {fileID: 2659039408157641319, guid: 94f1305a74348e043a1100f48460adbf, type: 3}
+  infectedIndicator: {fileID: 0}
+  winnerIndicator: {fileID: 0}
 --- !u!1 &9054126846395472459
 GameObject:
   m_ObjectHideFlags: 0

@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SimpleEnemyAI
   doesApplyForce: 1
   forceMode: 1
-  forceAmount: 15
+  forceAmount: 20
   angleOfForce: 0.25
   upwardForceMultiplier: 1
   forceCooldown: 0.5
@@ -65,7 +65,8 @@ MonoBehaviour:
   stoppingDistance: 1.5
   useCustomLinkJump: 1
   linkJumpHeight: 2.5
-  linkJumpDuration: 0.45
+  linkJumpDuration: 1
+  infectPlayerOnAttack: 0
   resetWhenBelowVoid: 1
   disableWhenBelowVoid: 0
   voidY: -10

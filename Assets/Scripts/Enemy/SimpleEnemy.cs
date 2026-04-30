@@ -40,6 +40,9 @@ public class SimpleEnemyAI : BaseHazard
     public float linkJumpHeight = 2.5f;
     public float linkJumpDuration = 0.45f;
 
+    [Header("Infection")]
+    public bool infectPlayerOnAttack = true;
+
     [Header("Void / Out Of Bounds")]
     public bool resetWhenBelowVoid = true;
     public bool disableWhenBelowVoid = false;
@@ -206,6 +209,12 @@ public class SimpleEnemyAI : BaseHazard
 
         if (retargetTimer > 0f && target != null)
         {
+            if (!IsValidHumanTarget(target))
+            {
+                target = null;
+                return;
+            }
+
             if (targetSearchMode == TargetSearchMode.RangeFastSearch && !IsTargetInDetectionRange(target))
             {
                 target = null;
@@ -240,6 +249,11 @@ public class SimpleEnemyAI : BaseHazard
                 continue;
             }
 
+            if (!IsValidHumanTarget(player.transform))
+            {
+                continue;
+            }
+
             Vector3 offset = player.transform.position - transform.position;
             float distanceSqr = offset.sqrMagnitude;
 
@@ -267,6 +281,11 @@ public class SimpleEnemyAI : BaseHazard
                 continue;
             }
 
+            if (!IsValidHumanTarget(player.transform))
+            {
+                continue;
+            }
+
             Vector3 offset = player.transform.position - transform.position;
             offset.y = 0f;
 
@@ -280,6 +299,23 @@ public class SimpleEnemyAI : BaseHazard
         }
 
         return closestPlayer;
+    }
+
+    private bool IsValidHumanTarget(Transform possibleTarget)
+    {
+        if (possibleTarget == null)
+        {
+            return false;
+        }
+
+        PlayerInfection playerInfection = possibleTarget.GetComponentInParent<PlayerInfection>();
+
+        if (playerInfection == null)
+        {
+            return false;
+        }
+
+        return playerInfection.IsHuman;
     }
 
     private bool IsTargetInDetectionRange(Transform possibleTarget)
@@ -465,6 +501,24 @@ public class SimpleEnemyAI : BaseHazard
             return;
         }
 
+        PlayerInfection targetInfection = target.GetComponentInParent<PlayerInfection>();
+
+        if (targetInfection == null || !targetInfection.IsHuman)
+        {
+            target = null;
+            return;
+        }
+
+        if (infectPlayerOnAttack)
+        {
+            targetInfection.Infect();
+
+            if (showDebugLogs)
+            {
+                Debug.Log("Enemy infected player: " + targetInfection.name);
+            }
+        }
+
         if (doesApplyForce)
         {
             Vector3 force = BuildForceToPlayer(targetPlayerMovement);
@@ -477,6 +531,8 @@ public class SimpleEnemyAI : BaseHazard
         }
 
         lastAttackTime = Time.time;
+
+        target = null;
     }
 
     private Vector3 BuildForceToPlayer(PlayerMovement playerMovement)

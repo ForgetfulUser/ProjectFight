@@ -485,6 +485,10 @@ PrefabInstance:
       propertyPath: upwardForce
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 6609542440511250463, guid: 34bc93db184a7c54b9fdc6029db20293, type: 3}
+      propertyPath: forceCooldown
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6610099362278913158, guid: 34bc93db184a7c54b9fdc6029db20293, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -605,7 +609,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.1
+  m_VoxelSize: 0.033333335
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 7deed07eca7cdb34db06810fcbd699f4, type: 2}
   m_BuildHeightMesh: 0
@@ -1286,7 +1290,19 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6609542440511250463, guid: 34bc93db184a7c54b9fdc6029db20293, type: 3}
+      propertyPath: onlyTargetHumans
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6609542440511250463, guid: 34bc93db184a7c54b9fdc6029db20293, type: 3}
       propertyPath: targetSearchMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6609542440511250463, guid: 34bc93db184a7c54b9fdc6029db20293, type: 3}
+      propertyPath: infectPlayerOnAttack
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6609542440511250463, guid: 34bc93db184a7c54b9fdc6029db20293, type: 3}
+      propertyPath: clearTargetAfterInfect
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6610099362278913158, guid: 34bc93db184a7c54b9fdc6029db20293, type: 3}
