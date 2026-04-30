@@ -702,10 +702,6 @@ PrefabInstance:
       value: GameManager
       objectReference: {fileID: 0}
     - target: {fileID: 3255869581789678136, guid: 0f084030525061a4d9d6ead0cb0bb6e6, type: 3}
-      propertyPath: TestingPlayer
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 3255869581789678136, guid: 0f084030525061a4d9d6ead0cb0bb6e6, type: 3}
       propertyPath: PlayerSpawnPosition_TRSFMs.Array.size
       value: 3
       objectReference: {fileID: 0}

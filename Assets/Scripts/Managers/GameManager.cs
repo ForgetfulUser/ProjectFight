@@ -1,3 +1,4 @@
+using UnityEditor.Purchasing;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,12 +6,19 @@ public class GameManager : MonoBehaviour
 {
     public PlayerManager PlayerManager;
     public HazardManager HazardManager;
-
+    public int Minutes;
+    private int startMinutes;
+    public float Seconds;
+    private float startSeconds;
+    private bool gameIsRunning = true;
+    public GameObject SplashScreen;
     [Header("Debug")]
     public bool enableDebugReset = true;
 
     protected virtual void Awake()
     {
+        startMinutes = Minutes;
+        startSeconds = Seconds;
         HazardManager.WakeUpManager();
     }
 
@@ -22,6 +30,9 @@ public class GameManager : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (SplashScreen) Destroy(SplashScreen);
+        if (gameIsRunning == false) return;
+
         PlayerManager.UpdateManager();
         HazardManager.UpdateManager();
 
@@ -41,5 +52,13 @@ public class GameManager : MonoBehaviour
     protected virtual void LateUpdate()
     {
         //Update UI here if needed
+    }
+
+    protected virtual void ResetGame()
+    {
+        //PlayerManager.ResetManager();
+        //HazardManager.ResetManager();
+        Minutes = startMinutes;
+        Seconds = startSeconds;
     }
 }

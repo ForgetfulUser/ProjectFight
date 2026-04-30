@@ -7,6 +7,8 @@ public class PlayerAnimationController : MonoBehaviour
     private Sprite jumpSprite;
     public SpriteRenderer SpriteRenderer;
     private bool lastJumpVal;
+    private int lastHorzVal;
+
     public void StartAnimation(int playerIndex)
     {
         GameObject decal = null;
@@ -42,10 +44,13 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void UpdateAnimation(Vector2 moveDir, bool isJumping, bool isPunching)
     {
-        Animator.SetInteger("Horizontal Movement", Mathf.RoundToInt(moveDir.x));
-        Animator.SetInteger("Vertical Movement", Mathf.RoundToInt(moveDir.y));
+        int x = Mathf.RoundToInt(moveDir.x);
+        int y = Mathf.RoundToInt(moveDir.y);
+        Animator.SetInteger("Horizontal Movement", x);
+        Animator.SetInteger("Vertical Movement", y);
+        if(x != 0) lastHorzVal = x;
         Animator.SetBool("Is Punching", isPunching);
-        SpriteRenderer.flipX = (isPunching && moveDir.x > 0);
+        SpriteRenderer.flipX = (isPunching && lastHorzVal > 0);
         //if(isJumping != lastJumpVal) ToggleJump();
     }
 
