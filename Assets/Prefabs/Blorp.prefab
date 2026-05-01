@@ -68,12 +68,16 @@ MonoBehaviour:
   linkJumpHeight: 2.5
   linkJumpDuration: 1
   infectPlayerOnAttack: 0
+  pushHitDelay: 0.4
+  pushRecoveryTime: 0.25
+  requireTargetStillInRange: 1
+  attackRangeForgiveness: 0.5
   resetWhenBelowVoid: 1
   disableWhenBelowVoid: 0
   voidY: -10
   resetToStartPosition: 1
   enemyAnimationController: {fileID: 4093921765178913784}
-  showDebugLogs: 0
+  showDebugLogs: 1
   drawGizmos: 1
 --- !u!54 &7688540710742800457
 Rigidbody:
@@ -137,8 +141,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAnimationController
   animator: {fileID: 5054879000543427379}
-  pushTriggerParameter: Push
-  jumpTriggerParameter: Jump
+  agent: {fileID: 719169355779176295}
+  idleStateName: Idle
+  moveStateName: Jump
+  pushStateName: Push
+  crossFadeTime: 0.05
+  pushLockTime: 0.45
+  showDebugLogs: 1
 --- !u!1001 &4314989373604275842
 PrefabInstance:
   m_ObjectHideFlags: 0

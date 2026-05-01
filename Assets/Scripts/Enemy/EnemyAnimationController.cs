@@ -1,13 +1,21 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyAnimationController : MonoBehaviour
 {
     [Header("References")]
     public Animator animator;
+    public NavMeshAgent agent;
 
     [Header("Animator Parameters")]
+    public string isMovingParameter = "IsMoving";
     public string pushTriggerParameter = "Push";
-    public string jumpTriggerParameter = "Jump";
+
+    [Header("Movement Check")]
+    public float movingSpeedThreshold = 0.05f;
+
+    private bool forceMovingAnimation;
+    private bool isAttacking;
 
     private void Awake()
     {
@@ -15,6 +23,46 @@ public class EnemyAnimationController : MonoBehaviour
         {
             animator = GetComponentInChildren<Animator>();
         }
+
+        if (agent == null)
+        {
+            agent = GetComponent<NavMeshAgent>();
+        }
+    }
+
+    private void Update()
+    {
+        UpdateMovementAnimation();
+    }
+
+    private void UpdateMovementAnimation()
+    {
+        if (animator == null)
+        {
+            return;
+        }
+
+        bool isMoving = false;
+
+        if (!isAttacking)
+        {
+            isMoving = forceMovingAnimation;
+
+            if (!isMoving && agent != null && agent.enabled && agent.isOnNavMesh)
+            {
+                Vector3 velocity = agent.velocity;
+                velocity.y = 0f;
+
+                isMoving = velocity.sqrMagnitude > movingSpeedThreshold * movingSpeedThreshold;
+            }
+        }
+
+        animator.SetBool(isMovingParameter, isMoving);
+    }
+
+    public void SetForceMovingAnimation(bool forceMoving)
+    {
+        forceMovingAnimation = forceMoving;
     }
 
     public void PlayPush()
@@ -24,18 +72,17 @@ public class EnemyAnimationController : MonoBehaviour
             return;
         }
 
+        isAttacking = true;
+        forceMovingAnimation = false;
+
+        animator.SetBool(isMovingParameter, false);
+
         animator.ResetTrigger(pushTriggerParameter);
         animator.SetTrigger(pushTriggerParameter);
     }
 
-    public void PlayJump()
+    public void EndAttackAnimationLock()
     {
-        if (animator == null)
-        {
-            return;
-        }
-
-        animator.ResetTrigger(jumpTriggerParameter);
-        animator.SetTrigger(jumpTriggerParameter);
+        isAttacking = false;
     }
 }

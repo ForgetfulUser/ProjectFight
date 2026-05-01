@@ -43,6 +43,12 @@ public class SimpleEnemyAI : BaseHazard
     [Header("Infection")]
     public bool infectPlayerOnAttack = true;
 
+    [Header("Attack Timing")]
+    public float pushHitDelay = 0.25f;
+    public float pushRecoveryTime = 0.25f;
+    public bool requireTargetStillInRange = true;
+    public float attackRangeForgiveness = 0.5f;
+
     [Header("Void / Out Of Bounds")]
     public bool resetWhenBelowVoid = true;
     public bool disableWhenBelowVoid = false;
@@ -69,6 +75,8 @@ public class SimpleEnemyAI : BaseHazard
 
     private bool hasStarted;
     private bool isTraversingLink;
+    private bool isAttacking;
+    private Coroutine attackRoutine;
 
     public override void StartHazard(HazardManager hazardManager)
     {
@@ -95,7 +103,6 @@ public class SimpleEnemyAI : BaseHazard
 
         hasStarted = true;
 
-
         ResetHazard();
     }
 
@@ -113,6 +120,12 @@ public class SimpleEnemyAI : BaseHazard
 
         if (agent == null || !agent.enabled || !agent.isOnNavMesh)
         {
+            return;
+        }
+
+        if (isAttacking)
+        {
+            StopAgent();
             return;
         }
 
@@ -142,11 +155,20 @@ public class SimpleEnemyAI : BaseHazard
 
     public override void ResetHazard()
     {
+        StopAttackRoutine();
+
         currentState = EnemyState.Idle;
         lastAttackTime = -999f;
         retargetTimer = 0f;
         target = null;
         isTraversingLink = false;
+        isAttacking = false;
+
+        if (enemyAnimationController != null)
+        {
+            enemyAnimationController.SetForceMovingAnimation(false);
+            enemyAnimationController.EndAttackAnimationLock();
+        }
 
         if (gameObject.activeSelf == false)
         {
@@ -188,8 +210,17 @@ public class SimpleEnemyAI : BaseHazard
             return false;
         }
 
+        StopAttackRoutine();
+
         target = null;
         currentState = EnemyState.Disabled;
+        isAttacking = false;
+
+        if (enemyAnimationController != null)
+        {
+            enemyAnimationController.SetForceMovingAnimation(false);
+            enemyAnimationController.EndAttackAnimationLock();
+        }
 
         if (agent != null && agent.enabled && agent.isOnNavMesh)
         {
@@ -399,10 +430,20 @@ public class SimpleEnemyAI : BaseHazard
         agent.speed = GetCurrentMoveSpeed();
         agent.stoppingDistance = stoppingDistance;
         agent.SetDestination(target.position);
+
+        if (enemyAnimationController != null)
+        {
+            enemyAnimationController.SetForceMovingAnimation(true);
+        }
     }
 
     private void StopAgent()
     {
+        if (enemyAnimationController != null)
+        {
+            enemyAnimationController.SetForceMovingAnimation(false);
+        }
+
         if (agent == null)
         {
             return;
@@ -428,7 +469,8 @@ public class SimpleEnemyAI : BaseHazard
 
         if (enemyAnimationController != null)
         {
-            enemyAnimationController.PlayJump();
+            enemyAnimationController.EndAttackAnimationLock();
+            enemyAnimationController.SetForceMovingAnimation(true);
         }
 
         OffMeshLinkData linkData = agent.currentOffMeshLinkData;
@@ -466,6 +508,11 @@ public class SimpleEnemyAI : BaseHazard
 
         agent.isStopped = false;
         isTraversingLink = false;
+
+        if (enemyAnimationController != null)
+        {
+            enemyAnimationController.SetForceMovingAnimation(false);
+        }
     }
 
     private float GetCurrentMoveSpeed()
@@ -493,6 +540,11 @@ public class SimpleEnemyAI : BaseHazard
 
     private void TryAttack()
     {
+        if (isAttacking)
+        {
+            return;
+        }
+
         if (target == null)
         {
             return;
@@ -508,24 +560,91 @@ public class SimpleEnemyAI : BaseHazard
             return;
         }
 
-        PlayerMovement targetPlayerMovement = target.GetComponentInParent<PlayerMovement>();
+        if (!IsValidHumanTarget(target))
+        {
+            target = null;
+            return;
+        }
+
+        Transform attackTarget = target;
+        target = null;
+
+        attackRoutine = StartCoroutine(AttackRoutine(attackTarget));
+    }
+
+    private IEnumerator AttackRoutine(Transform attackTarget)
+    {
+        isAttacking = true;
+        currentState = EnemyState.Attacking;
+        lastAttackTime = Time.time;
+
+        StopAgent();
+
+        if (enemyAnimationController != null)
+        {
+            enemyAnimationController.PlayPush();
+        }
+
+        if (pushHitDelay > 0f)
+        {
+            yield return new WaitForSeconds(pushHitDelay);
+        }
+
+        ApplyDelayedAttackHit(attackTarget);
+
+        if (pushRecoveryTime > 0f)
+        {
+            yield return new WaitForSeconds(pushRecoveryTime);
+        }
+
+        if (enemyAnimationController != null)
+        {
+            enemyAnimationController.EndAttackAnimationLock();
+        }
+
+        isAttacking = false;
+        attackRoutine = null;
+    }
+
+    private void ApplyDelayedAttackHit(Transform attackTarget)
+    {
+        if (attackTarget == null)
+        {
+            return;
+        }
+
+        if (transform.position.y < voidY)
+        {
+            return;
+        }
+
+        PlayerMovement targetPlayerMovement = attackTarget.GetComponentInParent<PlayerMovement>();
 
         if (targetPlayerMovement == null)
         {
             return;
         }
 
-        PlayerInfection targetInfection = target.GetComponentInParent<PlayerInfection>();
+        PlayerInfection targetInfection = attackTarget.GetComponentInParent<PlayerInfection>();
 
         if (targetInfection == null || !targetInfection.IsHuman)
         {
-            target = null;
             return;
         }
 
-        if (enemyAnimationController != null)
+        if (requireTargetStillInRange)
         {
-            enemyAnimationController.PlayPush();
+            float distanceToAttackTarget = GetHorizontalDistanceToTransform(attackTarget);
+
+            if (distanceToAttackTarget > attackRange + attackRangeForgiveness)
+            {
+                if (showDebugLogs)
+                {
+                    Debug.Log("Enemy attack missed because target moved out of range.");
+                }
+
+                return;
+            }
         }
 
         if (infectPlayerOnAttack)
@@ -548,9 +667,35 @@ public class SimpleEnemyAI : BaseHazard
                 Debug.Log("Enemy hit player with force: " + force);
             }
         }
+    }
 
-        lastAttackTime = Time.time;
-        target = null;
+    private void StopAttackRoutine()
+    {
+        if (attackRoutine != null)
+        {
+            StopCoroutine(attackRoutine);
+            attackRoutine = null;
+        }
+
+        isAttacking = false;
+
+        if (enemyAnimationController != null)
+        {
+            enemyAnimationController.EndAttackAnimationLock();
+        }
+    }
+
+    private float GetHorizontalDistanceToTransform(Transform possibleTarget)
+    {
+        if (possibleTarget == null)
+        {
+            return float.MaxValue;
+        }
+
+        Vector3 offset = possibleTarget.position - transform.position;
+        offset.y = 0f;
+
+        return offset.magnitude;
     }
 
     private Vector3 BuildForceToPlayer(PlayerMovement playerMovement)
