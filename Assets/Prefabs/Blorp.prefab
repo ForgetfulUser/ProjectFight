@@ -142,12 +142,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAnimationController
   animator: {fileID: 5054879000543427379}
   agent: {fileID: 719169355779176295}
-  idleStateName: Idle
-  moveStateName: Jump
-  pushStateName: Push
-  crossFadeTime: 0.05
-  pushLockTime: 0.45
-  showDebugLogs: 1
+  isMovingParameter: IsMoving
+  pushTriggerParameter: Push
+  movingSpeedThreshold: 0.05
 --- !u!1001 &4314989373604275842
 PrefabInstance:
   m_ObjectHideFlags: 0
