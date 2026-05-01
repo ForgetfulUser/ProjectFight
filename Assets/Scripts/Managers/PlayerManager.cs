@@ -87,7 +87,7 @@ public class PlayerManager : MonoBehaviour
         if (player.IsActive == false) return;
         
         player.CurrentLives--;
-        if (player.CurrentLives < 0)
+        if (player.CurrentLives <= 0)
         {
             player.gameObject.SetActive(false);
             player.IsActive = false;
