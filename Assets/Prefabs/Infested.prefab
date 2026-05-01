@@ -67,7 +67,7 @@ MonoBehaviour:
   useCustomLinkJump: 1
   linkJumpHeight: 2.5
   linkJumpDuration: 1
-  infectPlayerOnAttack: 0
+  infectPlayerOnAttack: 1
   pushHitDelay: 0.4
   pushRecoveryTime: 0.25
   requireTargetStillInRange: 1
