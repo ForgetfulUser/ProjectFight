@@ -69,7 +69,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   pressureCheckOffset: {x: 0, y: 0.4, z: 0}
-  pressureCheckHalfSize: {x: 2.5, y: 0.3, z: 2.5}
+  pressureCheckHalfSize: {x: 2.5, y: 1, z: 2.5}
   visualRender_TRSFM: {fileID: 1326725330856802375}
   floorCollider: {fileID: 758275332516504856}
 --- !u!1001 &4907109711124831145

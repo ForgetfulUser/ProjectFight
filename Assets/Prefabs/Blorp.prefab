@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6609542440511250463}
   - component: {fileID: 7688540710742800457}
   - component: {fileID: 719169355779176295}
+  - component: {fileID: 4093921765178913784}
   m_Layer: 0
   m_Name: Blorp
   m_TagString: Untagged
@@ -71,6 +72,7 @@ MonoBehaviour:
   disableWhenBelowVoid: 0
   voidY: -10
   resetToStartPosition: 1
+  enemyAnimationController: {fileID: 4093921765178913784}
   showDebugLogs: 0
   drawGizmos: 1
 --- !u!54 &7688540710742800457
@@ -122,6 +124,21 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &4093921765178913784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3939846030930367006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13a0ef83ce7681342b7aa60814163c1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAnimationController
+  animator: {fileID: 5054879000543427379}
+  pushTriggerParameter: Push
+  jumpTriggerParameter: Jump
 --- !u!1001 &4314989373604275842
 PrefabInstance:
   m_ObjectHideFlags: 0

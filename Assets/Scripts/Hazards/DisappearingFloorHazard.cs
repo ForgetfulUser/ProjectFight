@@ -300,11 +300,6 @@ public class DisappearingFloorHazard : BaseHazard
             floorCollider.enabled = true;
         }
 
-        if (floorAnimator != null && !string.IsNullOrEmpty(idleStateName))
-        {
-            floorAnimator.Play(idleStateName, 0, 0f);
-        }
-
         ResetWarningPulse();
     }
 

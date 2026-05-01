@@ -51,6 +51,9 @@ public class SimpleEnemyAI : BaseHazard
     [Header("Reset")]
     public bool resetToStartPosition = true;
 
+    [Header("Animation")]
+    public EnemyAnimationController enemyAnimationController;
+
     [Header("Debug")]
     public bool showDebugLogs = false;
     public bool drawGizmos = true;
@@ -71,6 +74,11 @@ public class SimpleEnemyAI : BaseHazard
     {
         base.StartHazard(hazardManager);
 
+        if (enemyAnimationController == null)
+        {
+            enemyAnimationController = GetComponent<EnemyAnimationController>();
+        }
+
         if (agent == null)
         {
             agent = GetComponent<NavMeshAgent>();
@@ -86,6 +94,7 @@ public class SimpleEnemyAI : BaseHazard
         }
 
         hasStarted = true;
+
 
         ResetHazard();
     }
@@ -417,6 +426,11 @@ public class SimpleEnemyAI : BaseHazard
 
         isTraversingLink = true;
 
+        if (enemyAnimationController != null)
+        {
+            enemyAnimationController.PlayJump();
+        }
+
         OffMeshLinkData linkData = agent.currentOffMeshLinkData;
 
         Vector3 startPos = transform.position;
@@ -509,6 +523,11 @@ public class SimpleEnemyAI : BaseHazard
             return;
         }
 
+        if (enemyAnimationController != null)
+        {
+            enemyAnimationController.PlayPush();
+        }
+
         if (infectPlayerOnAttack)
         {
             targetInfection.Infect();
@@ -531,7 +550,6 @@ public class SimpleEnemyAI : BaseHazard
         }
 
         lastAttackTime = Time.time;
-
         target = null;
     }
 
