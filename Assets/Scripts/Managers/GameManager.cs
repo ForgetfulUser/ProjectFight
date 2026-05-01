@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     {
         PlayerManager.StartManager(true);
         HazardManager.StartManager();
+        GameHUDManager.StartHUD(PlayerManager.ActivePlayers);
     }
 
     protected virtual void Update()

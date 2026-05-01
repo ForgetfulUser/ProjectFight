@@ -116,8 +116,7 @@ public class PlayerMovement : MonoBehaviour
     public void Attack(InputAction.CallbackContext context)
     {
         if(context.canceled) return;
-        Debug.Log("Punching");
-        if (punchingCoroutine == null) { punchingCoroutine = StartCoroutine(PunchingCoroutine()); Debug.Log("Punch Started"); }
+        if (punchingCoroutine == null) { punchingCoroutine = StartCoroutine(PunchingCoroutine()); }
     }
 
     public void Jump(InputAction.CallbackContext context)

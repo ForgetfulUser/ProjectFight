@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
 
     [Header("Reset Variables")]
     public Vector3 StartPos;
+    public bool IsActive = true;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public virtual void StartPlayer(bool canJump, int playerIndex)

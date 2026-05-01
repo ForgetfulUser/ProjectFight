@@ -30,8 +30,11 @@ public class PlayerManager : MonoBehaviour
         {
             foreach(var player in ActivePlayers)
             {
-                player.UpdatePlayer();
-                ResetTest(player);
+                if (player.IsActive)
+                {
+                    player.UpdatePlayer();
+                    ResetTest(player);
+                }
             }
         }
         else
@@ -47,7 +50,8 @@ public class PlayerManager : MonoBehaviour
         {
             foreach (var player in ActivePlayers)
             {
-                player.FixedUpdatePlayer();
+                if(player.IsActive)
+                    player.FixedUpdatePlayer();
             }
         }
         else
@@ -60,7 +64,7 @@ public class PlayerManager : MonoBehaviour
     {
         if(player.transform.position.y <= MinimumFallHeight)
         {
-            player.ResetPlayer();
+            RespawnPlayer(player);
         }
     }
 
@@ -78,6 +82,15 @@ public class PlayerManager : MonoBehaviour
 
     public void RespawnPlayer(Player player)
     {
+        if (player.IsActive == false) return;
+        
+        player.CurrentLives--;
+        if (player.CurrentLives < 0)
+        {
+            player.gameObject.SetActive(false);
+            player.IsActive = false;
+        }
+
         player.transform.position = PlayerSpawnPosition[player.PlayerIndex];
     }
 }
