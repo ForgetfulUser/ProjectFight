@@ -1,10 +1,13 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance { get; private set; }
+    public List<int> PlayerIDs = new List<int>();
     public int sceneIndex;
+
     private void Awake()
     {
         if (Instance == null)

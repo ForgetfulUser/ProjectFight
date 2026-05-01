@@ -39,6 +39,11 @@ public class GameHUDManager : MonoBehaviour
     {
         for (int i = 0;  i < PlayerLivesSpriteRender.Count; i++)
         {
+            if(i >= Players.Count)
+            {
+                PlayerLivesSpriteRender[i].transform.parent.gameObject.SetActive(false);
+                continue;
+            }
             int lifeIndex = Players[i].CurrentLives;
             if(lifeIndex < 0) lifeIndex = 0;
             PlayerLivesSpriteRender[i].sprite = LifeSprites[lifeIndex];

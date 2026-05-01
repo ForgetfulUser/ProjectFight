@@ -10,6 +10,7 @@ public class PlayerManager : MonoBehaviour
     public float MinimumFallHeight = -10;
     [Header("Play Test Variables")]
     public Player TestingPlayer;
+    private List<int> PlayerIDs = new List<int>();
 
     public void StartManager(bool canJump)
     {
@@ -19,6 +20,7 @@ public class PlayerManager : MonoBehaviour
             PlayerSpawnPosition.Add(spawnPos.position);
             Destroy(spawnPos.gameObject);
         }
+        PlayerIDs = LevelManager.Instance.PlayerIDs;
         SpawnPlayers(canJump);
         if (TestingPlayer) 
             Player_PRFB.StartPlayer(canJump, 0);
@@ -72,10 +74,10 @@ public class PlayerManager : MonoBehaviour
     {
         if (TestingPlayer) return;
 
-        for (int i = 0; i < PlayerSpawnPosition.Count; i++)
+        for (int i = 0; i < LevelManager.Instance.PlayerIDs.Count; i++)
         {
             Player player = Instantiate(Player_PRFB, PlayerSpawnPosition[i], Quaternion.identity);
-            player.StartPlayer(canJump, i);
+            player.StartPlayer(canJump, PlayerIDs[i]);
             ActivePlayers.Add(player);
         }
     }
