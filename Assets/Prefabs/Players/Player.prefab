@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 1392176331117373401}
   - component: {fileID: 7914208197252688345}
   - component: {fileID: 2913404083196610203}
-  - component: {fileID: -8921247011287224608}
+  - component: {fileID: -5858253499289652551}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -170,6 +170,7 @@ MonoBehaviour:
   PlayerMovement: {fileID: 7587992384834621376}
   PlayerAnimationController: {fileID: 2627637259430525071}
   PlayerPushComponent: {fileID: 2203776891576585838}
+  InfectedPlayerAttackComponent: {fileID: 0}
   PlayerIndex: 0
   CurrentLives: 3
   MaxLives: 0
@@ -437,7 +438,7 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &-8921247011287224608
+--- !u!114 &-5858253499289652551
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -452,6 +453,7 @@ MonoBehaviour:
   currentState: 0
   infectCooldownAfterTurning: 1
   canInfectImmediately: 0
+  infectedEffectObject: {fileID: 0}
   showDebugLogs: 0
 --- !u!1 &9054126846395472459
 GameObject:

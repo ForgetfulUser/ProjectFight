@@ -16,6 +16,9 @@ public class PlayerInfection : MonoBehaviour
     public float infectCooldownAfterTurning = 1f;
     public bool canInfectImmediately = false;
 
+    [Header("Infection Effect")]
+    [SerializeField] private GameObject infectedEffectObject;
+
     [Header("Debug")]
     public bool showDebugLogs = false;
 
@@ -49,6 +52,8 @@ public class PlayerInfection : MonoBehaviour
 
     private void Start()
     {
+        ApplyInfectionEffectState();
+
         if (infectionGameManager != null)
         {
             infectionGameManager.RegisterPlayer(this);
@@ -67,6 +72,8 @@ public class PlayerInfection : MonoBehaviour
     {
         currentState = InfectionState.Human;
         infectCooldownTimer = 0f;
+
+        ApplyInfectionEffectState();
 
         if (showDebugLogs)
         {
@@ -92,6 +99,8 @@ public class PlayerInfection : MonoBehaviour
             infectCooldownTimer = infectCooldownAfterTurning;
         }
 
+        ApplyInfectionEffectState();
+
         if (showDebugLogs)
         {
             Debug.Log(name + " became Infected.");
@@ -108,6 +117,8 @@ public class PlayerInfection : MonoBehaviour
         currentState = InfectionState.Winner;
         infectCooldownTimer = 0f;
 
+        ApplyInfectionEffectState();
+
         if (showDebugLogs)
         {
             Debug.Log(name + " is the Winner.");
@@ -117,5 +128,15 @@ public class PlayerInfection : MonoBehaviour
     public void SetManager(InfectionGameManager manager)
     {
         infectionGameManager = manager;
+    }
+
+    private void ApplyInfectionEffectState()
+    {
+        if (infectedEffectObject == null)
+        {
+            return;
+        }
+
+        infectedEffectObject.SetActive(IsInfected);
     }
 }
