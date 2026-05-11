@@ -4,33 +4,33 @@ using UnityEngine.UI;
 
 public class ImageAnimation : MonoBehaviour
 {
+    public Image targetImage; // assign in Inspector
+    public Sprite[] frames;
+    public float fps = 12f;
 
-    public Sprite[] sprites;
-    public int spritePerFrame = 6;
-    public bool loop = true;
-    public bool destroyOnEnd = false;
+    private Coroutine playCoroutine;
 
-    private int index = 0;
-    private Image image;
-    private int frame = 0;
-
-    void Awake()
+    void OnEnable()
     {
-        image = GetComponent<Image>();
+        if (targetImage != null && frames != null && frames.Length > 0)
+            playCoroutine = StartCoroutine(PlayAtFPS());
     }
 
-    void Update()
+    void OnDisable()
     {
-        if (!loop && index == sprites.Length) return;
-        frame++;
-        if (frame < spritePerFrame) return;
-        image.sprite = sprites[index];
-        frame = 0;
-        index++;
-        if (index >= sprites.Length)
+        if (playCoroutine != null) StopCoroutine(playCoroutine);
+    }
+
+    IEnumerator PlayAtFPS()
+    {
+        int i = 0;
+        float wait = 1f / Mathf.Max(0.0001f, fps);
+        while (true)
         {
-            if (loop) index = 0;
-            if (destroyOnEnd) Destroy(gameObject);
+            targetImage.sprite = frames[i];
+            i = (i + 1) % frames.Length;
+            yield return new WaitForSecondsRealtime(wait);
         }
     }
+
 }

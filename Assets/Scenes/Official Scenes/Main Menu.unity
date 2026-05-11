@@ -2417,13 +2417,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f240f7b0158ef14aa3203ad8f0e05f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ImageAnimation
-  sprites:
-  - {fileID: 982638116, guid: 2ab98801acfe1044f8a7ef4b84e22726, type: 3}
-  - {fileID: 1320829957, guid: 2ab98801acfe1044f8a7ef4b84e22726, type: 3}
-  - {fileID: 35913338, guid: 2ab98801acfe1044f8a7ef4b84e22726, type: 3}
-  spritePerFrame: 72
-  loop: 1
-  destroyOnEnd: 0
+  targetImage: {fileID: 1997586110}
+  frames:
+  - {fileID: -378593268, guid: ceca52d56590b7b4e93c63e8bc7ea5eb, type: 3}
+  - {fileID: 1715589016, guid: ceca52d56590b7b4e93c63e8bc7ea5eb, type: 3}
+  - {fileID: 891632907, guid: ceca52d56590b7b4e93c63e8bc7ea5eb, type: 3}
+  fps: 3
 --- !u!114 &1997586110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2444,7 +2443,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 982638116, guid: 2ab98801acfe1044f8a7ef4b84e22726, type: 3}
+  m_Sprite: {fileID: -378593268, guid: ceca52d56590b7b4e93c63e8bc7ea5eb, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
