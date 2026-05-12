@@ -32,10 +32,10 @@ public class EnemyAnimationController : MonoBehaviour
 
     private void Update()
     {
-        UpdateMovementAnimation();
+        //UpdateMovementAnimation();
     }
 
-    private void UpdateMovementAnimation()
+    public void UpdateMovementAnimation()
     {
         if (animator == null)
         {

@@ -151,6 +151,96 @@ public class SimpleEnemyAI : BaseHazard
 
         UpdateState();
         UpdateBehavior();
+
+        // Update Animation
+        enemyAnimationController.UpdateMovementAnimation();
+    }
+
+    private void UpdateState()
+    {
+        if (target == null)
+        {
+            currentState = EnemyState.Idle;
+            return;
+        }
+
+        float distanceToTarget = GetHorizontalDistanceToTarget();
+
+        if (distanceToTarget <= attackRange)
+        {
+            currentState = EnemyState.Attacking;
+        }
+        else
+        {
+            currentState = EnemyState.Chasing;
+        }
+    }
+
+    private void UpdateBehavior()
+    {
+        if (currentState == EnemyState.Disabled)
+        {
+            StopAgent();
+            return;
+        }
+
+        if (currentState == EnemyState.Idle)
+        {
+            StopAgent();
+        }
+        else if (currentState == EnemyState.Chasing)
+        {
+            ChaseTarget();
+        }
+        else if (currentState == EnemyState.Attacking)
+        {
+            StopAgent();
+            TryAttack();
+        }
+    }
+
+    private void ChaseTarget()
+    {
+        if (agent == null || target == null)
+        {
+            return;
+        }
+
+        if (!agent.enabled || !agent.isOnNavMesh)
+        {
+            return;
+        }
+
+        agent.isStopped = false;
+        agent.speed = GetCurrentMoveSpeed();
+        agent.stoppingDistance = stoppingDistance;
+        agent.SetDestination(target.position);
+
+        if (enemyAnimationController != null)
+        {
+            enemyAnimationController.SetForceMovingAnimation(true);
+        }
+    }
+
+    private void StopAgent()
+    {
+        if (enemyAnimationController != null)
+        {
+            enemyAnimationController.SetForceMovingAnimation(false);
+        }
+
+        if (agent == null)
+        {
+            return;
+        }
+
+        if (!agent.enabled || !agent.isOnNavMesh)
+        {
+            return;
+        }
+
+        agent.isStopped = true;
+        agent.ResetPath();
     }
 
     public override void ResetHazard()
@@ -371,93 +461,6 @@ public class SimpleEnemyAI : BaseHazard
         return offset.sqrMagnitude <= detectionRange * detectionRange;
     }
 
-    private void UpdateState()
-    {
-        if (target == null)
-        {
-            currentState = EnemyState.Idle;
-            return;
-        }
-
-        float distanceToTarget = GetHorizontalDistanceToTarget();
-
-        if (distanceToTarget <= attackRange)
-        {
-            currentState = EnemyState.Attacking;
-        }
-        else
-        {
-            currentState = EnemyState.Chasing;
-        }
-    }
-
-    private void UpdateBehavior()
-    {
-        if (currentState == EnemyState.Disabled)
-        {
-            StopAgent();
-            return;
-        }
-
-        if (currentState == EnemyState.Idle)
-        {
-            StopAgent();
-        }
-        else if (currentState == EnemyState.Chasing)
-        {
-            ChaseTarget();
-        }
-        else if (currentState == EnemyState.Attacking)
-        {
-            StopAgent();
-            TryAttack();
-        }
-    }
-
-    private void ChaseTarget()
-    {
-        if (agent == null || target == null)
-        {
-            return;
-        }
-
-        if (!agent.enabled || !agent.isOnNavMesh)
-        {
-            return;
-        }
-
-        agent.isStopped = false;
-        agent.speed = GetCurrentMoveSpeed();
-        agent.stoppingDistance = stoppingDistance;
-        agent.SetDestination(target.position);
-
-        if (enemyAnimationController != null)
-        {
-            enemyAnimationController.SetForceMovingAnimation(true);
-        }
-    }
-
-    private void StopAgent()
-    {
-        if (enemyAnimationController != null)
-        {
-            enemyAnimationController.SetForceMovingAnimation(false);
-        }
-
-        if (agent == null)
-        {
-            return;
-        }
-
-        if (!agent.enabled || !agent.isOnNavMesh)
-        {
-            return;
-        }
-
-        agent.isStopped = true;
-        agent.ResetPath();
-    }
-
     private IEnumerator TraverseLinkJump()
     {
         if (agent == null)
@@ -517,12 +520,7 @@ public class SimpleEnemyAI : BaseHazard
 
     private float GetCurrentMoveSpeed()
     {
-        if (targetSearchMode == TargetSearchMode.GlobalSlowSearch)
-        {
-            return globalSearchMoveSpeed;
-        }
-
-        return rangeSearchMoveSpeed;
+        return targetSearchMode == TargetSearchMode.GlobalSlowSearch ? globalSearchMoveSpeed : rangeSearchMoveSpeed;
     }
 
     private float GetHorizontalDistanceToTarget()

@@ -11,11 +11,15 @@ public class GameManager : MonoBehaviour
     public int Minutes;
     private int startMinutes;
     public float Seconds;
+    private float preGameTimer = 3f;
+    private float preGameTimerMulti = 1.2f;
     private float startSeconds;
-    private bool gameIsRunning = true;
+    private bool isGameRunning = true;
+    private bool isPreGame = true;
     public GameObject SplashScreen;
     [Header("Debug")]
     public bool enableDebugReset = true;
+    public bool skipPreGame = false;
 
     protected virtual void Awake()
     {
@@ -29,12 +33,28 @@ public class GameManager : MonoBehaviour
         PlayerManager.StartManager(true);
         HazardManager.StartManager();
         GameHUDManager.StartHUD(PlayerManager.ActivePlayers);
+
+        if (skipPreGame)
+        {
+            preGameTimer = 0f;
+        }
     }
 
     protected virtual void Update()
     {
+        if (preGameTimer >= 0)
+        {
+            preGameTimer -= Time.deltaTime * preGameTimerMulti;
+
+            if(preGameTimer <= 1f)
+            {
+                isPreGame = false;
+            }
+            GameHUDManager.UpdatePreGameTimer(preGameTimer);
+        }
+
         if (SplashScreen) Destroy(SplashScreen);
-        if (gameIsRunning == false) return;
+        if (isGameRunning == false) return;
 
         PlayerManager.UpdateManager();
         HazardManager.UpdateManager();
@@ -53,14 +73,14 @@ public class GameManager : MonoBehaviour
         }
         if (Minutes < 0)
         {
-            gameIsRunning = false;
+            isGameRunning = false;
             GameOver();
         }
     }
 
     protected virtual void FixedUpdate()
     {
-        if (gameIsRunning == false) return;
+        if (isGameRunning == false || isPreGame == true) return;
         PlayerManager.FixedUpdateManager();
         HazardManager.FixedUpdateManager();
     }
@@ -78,7 +98,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator GameOverCoroutine()
     {
-        gameIsRunning = false;
+        isGameRunning = false;
         GameHUDManager.GameOver();
         yield return new WaitForSeconds(0.7f);
         LevelManager.Instance.LoadNextScene();
