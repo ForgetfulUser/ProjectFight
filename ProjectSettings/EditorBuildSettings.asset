@@ -9,19 +9,19 @@ EditorBuildSettings:
     path: Assets/Scenes/Official Scenes/Main Menu.unity
     guid: 941f60a7c51fba74a9b7cb2dddc07633
   - enabled: 1
-    path: Assets/Scenes/Official Scenes/1-Whipper-Easy.unity
+    path: Assets/Scenes/StarterScenes/1-Whipper-Easy.unity
     guid: 703356ca39d254943900c13b4797ac85
   - enabled: 1
-    path: Assets/Scenes/Official Scenes/2-Bedwars.unity
+    path: Assets/Scenes/StarterScenes/2-Bedwars.unity
     guid: 68eba3502c094df49b303517063fc1d0
   - enabled: 1
-    path: Assets/Scenes/Official Scenes/3-Whipper-Hard.unity
+    path: Assets/Scenes/StarterScenes/3-Whipper-Hard.unity
     guid: faa8bd53b2f0ed44b8a243a12e37fab2
   - enabled: 1
-    path: Assets/Scenes/Official Scenes/4-Infected.unity
+    path: Assets/Scenes/StarterScenes/4-Infected.unity
     guid: bc0c5aa5c1dfc874488316651ab939d9
   - enabled: 1
-    path: Assets/Scenes/Official Scenes/5-Lava Map.unity
+    path: Assets/Scenes/StarterScenes/5-Lava Map.unity
     guid: 40e2607ea79004b45bf19b291432eeeb
   - enabled: 1
     path: Assets/Scenes/Official Scenes/Credit Scene.unity
