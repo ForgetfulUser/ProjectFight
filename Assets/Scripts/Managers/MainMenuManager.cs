@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -11,6 +12,7 @@ public class MainMenuManager : MonoBehaviour
     public Transform PlayerSelection_TRSFM;
     public List<Image> PlayerSelections_IMG = new List<Image>();
     public List<int> PlayerIDs = new List<int>();
+    public Dictionary<int, int> playerIDs = new Dictionary<int, int>(); // Device | Player ID
     public List<int> DeviceIDs = new List<int>();
     private int currentID;
 
@@ -21,15 +23,19 @@ public class MainMenuManager : MonoBehaviour
 
     public void StartGame()
     {
-        LevelManager.Instance.PlayerIDs = PlayerIDs;
+        LevelManager.Instance.playerIDs = playerIDs;
         LevelManager.Instance.LoadNextScene();
     }
 
     public void SelectPlayer(PlayerInput playerInput)
     {
+        for (int i = 0; i < playerInput.devices.Count; i++)
+        {
+            if (DeviceIDs.Contains(playerInput.devices[i].deviceId)) return;
+        }
+
         int deviceID = playerInput.devices[0].deviceId;
-        if (DeviceIDs.Contains(deviceID)) return;
-        PlayerIDs.Add(currentID);
+        playerIDs.Add(playerIDs.Count,  deviceID);
         DeviceIDs.Add(deviceID);
         PlayerSelections_IMG[currentID].color = Color.white;
         currentID++;

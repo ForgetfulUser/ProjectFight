@@ -5,7 +5,8 @@ using UnityEngine.SceneManagement;
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance { get; private set; }
-    public List<int> PlayerIDs = new List<int>();
+    //public List<int> PlayerIDs = new List<int>();
+    public Dictionary<int, int> playerIDs; // Device | Player ID
     public int sceneIndex;
     bool isLoading = false;
 
@@ -47,7 +48,6 @@ public class LevelManager : MonoBehaviour
         SceneManager.LoadScene(sceneIndex);
     }
 
-    
 
     public void LoadNextScene()
     {

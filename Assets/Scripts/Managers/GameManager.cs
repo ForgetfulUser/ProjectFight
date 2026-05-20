@@ -40,6 +40,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    protected virtual void UpdateServer()
+    {
+        // if(IsServer == false) return;
+        /// Packets to Recieve
+        /// - player input
+        /// Server relevant functions
+        /// - player movement
+        /// - enemy movement
+        /// - collision triggers
+    }
+
     protected virtual void Update()
     {
         if (preGameTimer >= 0)
@@ -87,7 +98,6 @@ public class GameManager : MonoBehaviour
 
     protected virtual void LateUpdate()
     {
-        //Update UI here if needed
         GameHUDManager.UpdateHUD(Minutes, Seconds);
     }
 
