@@ -75,7 +75,6 @@ public class PlayerManager : MonoBehaviour
         if (TestingPlayer) return;
         for(int i = PlayerIDs.Count - 1; i >= 0 ; i--)
         {
-            Debug.Log(PlayerIDs[i]);
             Player player = Instantiate(Player_PRFB, PlayerSpawnPosition[i], Quaternion.identity);
             player.StartPlayer(canJump, i);
             ActivePlayers.Add(player);

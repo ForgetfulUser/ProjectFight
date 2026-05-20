@@ -16,7 +16,6 @@ public class MainMenuPlayer : MonoBehaviour
 
     public void StartGame(InputAction.CallbackContext context)
     {
-        Debug.Log("Start");
         MainMenuManager.Instance.StartGame();
         //MainMenuManager.Instance.SelectPlayer();
     }
