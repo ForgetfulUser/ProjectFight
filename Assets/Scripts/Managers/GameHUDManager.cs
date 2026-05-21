@@ -12,6 +12,7 @@ public class GameHUDManager : MonoBehaviour
     public TMP_Text Timer_TXT;
     public Image ReadySetGo_IMG;
     public GameObject GameOver_GO;
+    public TMP_Text GameOver_TXT;
 
     public void StartHUD(List<Player> players)
     {
@@ -71,8 +72,11 @@ public class GameHUDManager : MonoBehaviour
         }
     }
 
-    public void GameOver()
+    public void GameOver(int playerIndex)
     {
+        GameOver_TXT.text = playerIndex > 0 
+            ? "WINNER!!\r\nPlayer " + (playerIndex + 1) + "!!!"
+            : "NO WINNER!!";
         GameOver_GO.SetActive(true);
     }
 }

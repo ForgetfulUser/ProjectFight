@@ -76,6 +76,12 @@ public class GameManager : MonoBehaviour
             Debug.Log("Hazards reset.");
         }
 
+        if (WinCheck() != null)
+        {
+            Seconds = 0;
+            Minutes = 0;
+        }
+
         Seconds -= Time.deltaTime;
         if (Seconds < 0)
         {
@@ -109,7 +115,8 @@ public class GameManager : MonoBehaviour
     private IEnumerator GameOverCoroutine()
     {
         isGameRunning = false;
-        GameHUDManager.GameOver();
+        int finalPlayerIndex = PlayerManager.lastPlayerStanding ? PlayerManager.lastPlayerStanding.PlayerIndex : -1;
+        GameHUDManager.GameOver(finalPlayerIndex);
         yield return new WaitForSeconds(0.7f);
         LevelManager.Instance.LoadNextScene();
     }
@@ -121,5 +128,10 @@ public class GameManager : MonoBehaviour
         //HazardManager.ResetManager();
         Minutes = startMinutes;
         Seconds = startSeconds;
+    }
+
+    protected virtual Player WinCheck()
+    {
+        return PlayerManager.LastPlayerStanding();
     }
 }

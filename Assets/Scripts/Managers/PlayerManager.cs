@@ -7,10 +7,12 @@ public class PlayerManager : MonoBehaviour
     public Player Player_PRFB;
     private List<Vector3> PlayerSpawnPosition = new List<Vector3>();
     public List<Player> ActivePlayers = new List<Player>();
+    public List<Player> InactivePlayers = new List<Player>();
     public float MinimumFallHeight = -10;
     [Header("Play Test Variables")]
     public Player TestingPlayer;
     private Dictionary<int, int> PlayerIDs = new Dictionary<int, int>(); // Device | Player
+    public Player lastPlayerStanding;
 
     public void StartManager(bool canJump)
     {
@@ -90,8 +92,23 @@ public class PlayerManager : MonoBehaviour
         {
             player.gameObject.SetActive(false);
             player.IsActive = false;
+            if(InactivePlayers.Contains(player) == false)
+                InactivePlayers.Add(player);
         }
 
         player.transform.position = PlayerSpawnPosition[player.PlayerIndex];
+    }
+
+    public Player LastPlayerStanding()
+    {
+        if (InactivePlayers.Count + 1 < ActivePlayers.Count) return null;
+
+        foreach (Player player in ActivePlayers)
+        {
+            if(InactivePlayers.Contains(player)) continue;
+            lastPlayerStanding = player;
+        }
+        Debug.Log("Last Player: " + lastPlayerStanding);
+        return lastPlayerStanding;
     }
 }

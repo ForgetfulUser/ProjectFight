@@ -115,6 +115,7 @@ MonoBehaviour:
   Timer_TXT: {fileID: 6650758190236929587}
   ReadySetGo_IMG: {fileID: 2038993249818312661}
   GameOver_GO: {fileID: 6939971243187978853}
+  GameOver_TXT: {fileID: 615809375489930151}
 --- !u!1 &3880598403094486762
 GameObject:
   m_ObjectHideFlags: 0
@@ -238,8 +239,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerManager
   Player_PRFB: {fileID: 6608655026131374792, guid: 186ffcbde9a3a5c4793f7e079d0e1518, type: 3}
   ActivePlayers: []
+  InactivePlayers: []
   MinimumFallHeight: -7
   TestingPlayer: {fileID: 0}
+  lastPlayerStanding: {fileID: 0}
 --- !u!1 &6542765334844722772
 GameObject:
   m_ObjectHideFlags: 0
@@ -284,7 +287,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a711867d9f80344aa6020475d149465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelManager
-  PlayerIDs: 00000000010000000200000003000000
   sceneIndex: 0
 --- !u!1001 &8018898967488807746
 PrefabInstance:
@@ -393,6 +395,10 @@ PrefabInstance:
     - target: {fileID: 5706792703354527629, guid: c675b9e191dc6bb47982dba5333b96aa, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6597920188497256476, guid: c675b9e191dc6bb47982dba5333b96aa, type: 3}
+      propertyPath: m_Name
+      value: Gamve Text (TMP)
       objectReference: {fileID: 0}
     - target: {fileID: 6708089276806749996, guid: c675b9e191dc6bb47982dba5333b96aa, type: 3}
       propertyPath: m_Pivot.x
@@ -506,6 +512,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+--- !u!114 &615809375489930151 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7476838784710242533, guid: c675b9e191dc6bb47982dba5333b96aa, type: 3}
+  m_PrefabInstance: {fileID: 8018898967488807746}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!114 &2038993249818312661 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8287520040119188631, guid: c675b9e191dc6bb47982dba5333b96aa, type: 3}
