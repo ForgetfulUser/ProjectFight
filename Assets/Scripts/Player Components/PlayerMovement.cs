@@ -114,7 +114,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if(context.canceled) return;
+        if (context.canceled) return;
         if (punchingCoroutine == null) { punchingCoroutine = StartCoroutine(PunchingCoroutine()); }
     }
 
