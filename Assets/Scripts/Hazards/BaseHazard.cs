@@ -15,7 +15,7 @@ public class BaseHazard : MonoBehaviour
     public float stunDuration;
     [Header("Removal")] // The manager checks if IsActive is false and if ShouldRemove is true. If this condition is met, the hazard will be removed
     public bool ShouldRemove = true;
-    public bool IsActive;
+    public bool IsActive = true;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public virtual void StartHazard(HazardManager hazardManager)
