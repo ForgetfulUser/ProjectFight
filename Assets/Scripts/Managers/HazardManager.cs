@@ -28,10 +28,17 @@ public class HazardManager : MonoBehaviour
     // Update is called once per frame
     public virtual void UpdateManager()
     {
+        List<BaseHazard> hazardRemovalList = new List<BaseHazard>();
         foreach(var haz in Hazards)
         {
             haz.UpdateHazard();
+            if(haz.IsActive == false && haz.ShouldRemove == true)
+            {
+                hazardRemovalList.Add(haz);
+            }
         }
+
+        RemoveHazards(hazardRemovalList);
     }
 
     public virtual void FixedUpdateManager()
@@ -48,5 +55,19 @@ public class HazardManager : MonoBehaviour
         {
             haz.ResetHazard();
         }
+    }
+
+    public virtual void RemoveHazards(List<BaseHazard> baseHazards)
+    {
+        foreach(BaseHazard hazard in baseHazards)
+        {
+            RemoveHazard(hazard);
+        }
+    }
+
+    public virtual void RemoveHazard(BaseHazard hazard)
+    {
+        Hazards.Remove(hazard);
+        Destroy(hazard.gameObject);
     }
 }

@@ -13,6 +13,9 @@ public class BaseHazard : MonoBehaviour
     public float forceCooldown;
     [Header("Stun")]
     public float stunDuration;
+    [Header("Removal")] // The manager checks if IsActive is false and if ShouldRemove is true. If this condition is met, the hazard will be removed
+    public bool ShouldRemove = true;
+    public bool IsActive;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public virtual void StartHazard(HazardManager hazardManager)
@@ -23,7 +26,7 @@ public class BaseHazard : MonoBehaviour
     // Update is called once per frame
     public virtual void UpdateHazard()
     {
-
+        if (IsActive == false) return;
     }
 
     public virtual void HitPlayer(PlayerMovement playerMovement, Vector3 force)
@@ -33,11 +36,16 @@ public class BaseHazard : MonoBehaviour
 
     public virtual void FixedUpdateHazard()
     {
-
+        if (IsActive == false) return;
     }
 
     public virtual void ResetHazard()
     {
+        IsActive = true;
+    }
 
+    public virtual void SetForRemoval()
+    {
+        IsActive = false;
     }
 }
