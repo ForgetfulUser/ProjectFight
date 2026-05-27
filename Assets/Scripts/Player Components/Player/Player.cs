@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
     public PlayerMovement PlayerMovement;
     public PlayerAnimationController PlayerAnimationController;
     public PlayerPushComponent PlayerPushComponent;
+    public PlayerCanvasManager PlayerCanvasManager;
     public InfectedPlayerAttackComponent InfectedPlayerAttackComponent;
 
     [Header("Player Indicator")]
@@ -24,6 +25,7 @@ public class Player : MonoBehaviour
     {
         PlayerMovement.StartMovement(canJump);
         PlayerIndex = playerIndex;
+        PlayerCanvasManager.StartManager(PlayerIndex);
         PlayerAnimationController.StartAnimation(PlayerIndex);
         StartPos = transform.localPosition;
     }
