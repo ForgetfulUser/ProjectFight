@@ -16,6 +16,7 @@ public class NewPlayerMovement : MonoBehaviour
     [Header("Player Movement")]
     [SerializeField] float playerSpeed;
     [SerializeField] float jumpForce;
+    [SerializeField] float maxFallSpeed;
     bool isGrounded;
     bool isJumping;
     Vector2 xzMoveVector;
@@ -30,24 +31,33 @@ public class NewPlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        xzMoveVector = move.ReadValue<Vector2>(); 
         groundCheck();
-
-
-        if (jump.WasPerformedThisFrame())
+        if (jump.WasPerformedThisFrame() && isGrounded)
         {
-            if (isGrounded) 
-            {
-                playerJump();
-            }
-            // Negates velocity to give more precise jump control
+            playerJump();
         }
-        if (!isGrounded && jump.WasReleasedThisFrame())
-        {
-             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-        }
+        jumpNegation();
+
 
     }
+    private void FixedUpdate()
+    {
+        playerMovement();
+      
+    }
 
+    void jumpNegation()
+    {
+        // Negates player velocity and adds a bit of downward force to make the jump feel less floaty
+        // @@TODO: Have this only be triggered while not falling and apply negative downward velocity, can exploit it to have practically infinite air time by stall
+        if (!isGrounded && rb.linearVelocity.y > 0 && jump.WasReleasedThisDynamicUpdate())
+        {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, -1f, rb.linearVelocity.z);
+        }
+    }
+
+    
     IEnumerator jumpCooldown() // might deprecate this
     {
         yield return new WaitForSeconds(2.0f);
@@ -67,7 +77,11 @@ public class NewPlayerMovement : MonoBehaviour
         isJumping = true;
         rb.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
     }
-
+    void playerMovement()
+    {
+        xzMoveVector *= playerSpeed;
+        rb.linearVelocity = new Vector3(xzMoveVector.x, rb.linearVelocity.y, xzMoveVector.y); 
+    }
     void groundCheck()
     {
         Collider[] hits = Physics.OverlapBox(groundCheckBox.transform.position, groundCheckSize, transform.rotation, groundLayer);
