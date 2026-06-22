@@ -38,6 +38,7 @@ public class CharacterAudioController : MonoBehaviour
             StopCoroutine(soundCoroutine);
             soundCoroutine = null;
         }
+        soundCoroutine = StartCoroutine(RemoveSound(AttackAudioClips[randClip].length));
         PlaySound(AttackAudioClips[randClip]);
     }
 
