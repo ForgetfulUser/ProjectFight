@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -108,6 +109,7 @@ public class SimpleEnemyAI : BaseHazard
 
     public override void UpdateHazard()
     {
+        Debug.Log("Upd");
         if (!hasStarted)
         {
             return;
@@ -403,9 +405,9 @@ public class SimpleEnemyAI : BaseHazard
 
         Transform closestPlayer = null;
         float closestDistanceSqr = detectionRange * detectionRange;
-
         foreach (GameObject player in players)
         {
+            Debug.Log(player.name);
             if (player == null)
             {
                 continue;
@@ -420,7 +422,7 @@ public class SimpleEnemyAI : BaseHazard
             offset.y = 0f;
 
             float distanceSqr = offset.sqrMagnitude;
-
+            
             if (distanceSqr <= closestDistanceSqr)
             {
                 closestDistanceSqr = distanceSqr;
@@ -442,7 +444,7 @@ public class SimpleEnemyAI : BaseHazard
 
         if (playerInfection == null)
         {
-            return false;
+            return true;
         }
 
         return playerInfection.IsHuman;

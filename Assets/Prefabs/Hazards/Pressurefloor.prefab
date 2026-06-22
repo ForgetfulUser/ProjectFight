@@ -45,19 +45,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6bbb8850f38187498f0eba94f2a17ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DisappearingFloorHazard
+  doesApplyForce: 0
+  forceMode: 0
+  forceAmount: 0
+  angleOfForce: 0
+  upwardForceMultiplier: 0
+  forceCooldown: 0
+  stunDuration: 0
+  ShouldRemove: 1
+  IsActive: 1
   triggerMode: 1
   activeTime: 3
   pressureDelayTime: 0.5
   warningTime: 2
   hiddenTime: 2
+  useDisappearAnimation: 1
+  floorAnimator: {fileID: 0}
+  disappearTriggerName: Disappear
+  disappearStateName: Disappear
+  idleStateName: Idle
+  useWarningPulse: 1
+  warningPulseAmount: 0.08
+  warningPulseSpeed: 8
   pressureLayer:
     serializedVersion: 2
     m_Bits: 128
   pressureCheckOffset: {x: 0, y: 0.4, z: 0}
   pressureCheckHalfSize: {x: 1, y: 0.3, z: 1}
-  normalColor: {r: 0.9464574, g: 0.9496855, b: 0, a: 1}
-  warningColor: {r: 1, g: 0, b: 0, a: 1}
   visualRender_TRSFM: {fileID: 8777751516449947373}
+  floorCollider: {fileID: 0}
 --- !u!1 &4750549658816954906
 GameObject:
   m_ObjectHideFlags: 0

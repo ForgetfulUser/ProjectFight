@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 7688540710742800457}
   - component: {fileID: 719169355779176295}
   - component: {fileID: 4093921765178913784}
+  - component: {fileID: -5114941315980792098}
+  - component: {fileID: 4311169134189542906}
   m_Layer: 0
   m_Name: Blorp
   m_TagString: Untagged
@@ -55,6 +57,8 @@ MonoBehaviour:
   upwardForceMultiplier: 1
   forceCooldown: 0.5
   stunDuration: 0.15
+  ShouldRemove: 1
+  IsActive: 1
   targetSearchMode: 1
   playerTag: Player
   retargetInterval: 0.25
@@ -142,9 +146,125 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAnimationController
   animator: {fileID: 5054879000543427379}
   agent: {fileID: 719169355779176295}
+  characterAudioController: {fileID: 4311169134189542906}
   isMovingParameter: IsMoving
   pushTriggerParameter: Push
   movingSpeedThreshold: 0.05
+--- !u!82 &-5114941315980792098
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3939846030930367006}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 6946fa737839d364ba671bf4b557be17, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &4311169134189542906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3939846030930367006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 054106aebf6515144bec0fdc9c05b1ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterAudioController
+  sfx_AS: {fileID: -5114941315980792098}
+  MovementAudioClips:
+  - {fileID: 8300000, guid: 4fdc680131b728045bf3eea62a6b08a7, type: 3}
+  - {fileID: 8300000, guid: 118d6a4cd3459dc4a9ddfc86d24eddb0, type: 3}
+  AttackAudioClips:
+  - {fileID: 8300000, guid: 8277b00baec057246a8820f5db493b77, type: 3}
 --- !u!1001 &4314989373604275842
 PrefabInstance:
   m_ObjectHideFlags: 0

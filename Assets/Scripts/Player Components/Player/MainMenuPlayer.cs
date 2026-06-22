@@ -8,6 +8,7 @@ public class MainMenuPlayer : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log(name);
         if (GetComponent<PlayerInput>().devices.Count > 0)
         {
             Destroy(gameObject);
@@ -16,8 +17,7 @@ public class MainMenuPlayer : MonoBehaviour
 
     public void StartGame(InputAction.CallbackContext context)
     {
-        MainMenuManager.Instance.StartGame();
-        //MainMenuManager.Instance.SelectPlayer();
+        MainMenuManager.Instance.PlayerSelectionManager.StartGame();
     }
 
 }

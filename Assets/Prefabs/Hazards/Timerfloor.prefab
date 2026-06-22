@@ -52,6 +52,8 @@ MonoBehaviour:
   upwardForceMultiplier: 0
   forceCooldown: 0
   stunDuration: 0
+  ShouldRemove: 1
+  IsActive: 1
   triggerMode: 0
   activeTime: 3
   pressureDelayTime: 0.5

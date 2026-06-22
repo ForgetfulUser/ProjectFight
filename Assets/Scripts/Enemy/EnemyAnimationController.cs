@@ -6,6 +6,7 @@ public class EnemyAnimationController : MonoBehaviour
     [Header("References")]
     public Animator animator;
     public NavMeshAgent agent;
+    public CharacterAudioController characterAudioController;
 
     [Header("Animator Parameters")]
     public string isMovingParameter = "IsMoving";
@@ -57,6 +58,7 @@ public class EnemyAnimationController : MonoBehaviour
             }
         }
 
+        characterAudioController.PlayMovementClip();
         animator.SetBool(isMovingParameter, isMoving);
     }
 
@@ -67,6 +69,7 @@ public class EnemyAnimationController : MonoBehaviour
 
     public void PlayPush()
     {
+        characterAudioController.PlayAttackClip();
         if (animator == null)
         {
             return;
