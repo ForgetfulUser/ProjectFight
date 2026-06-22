@@ -50,6 +50,7 @@ public class PlayerPushComponent : MonoBehaviour
             // Calculate direction away from this object
             if(hit.gameObject == gameObject) continue;
             hit.GetComponent<PlayerMovement>().ApplyForce(pushDirection * pushForce, 0, ForceMode.Impulse);
+            hit.GetComponent<CharacterAudioController>().PlayClipByType(AudioType.TakeDamage);
         }
     }
 

@@ -32,6 +32,7 @@ public class BaseHazard : MonoBehaviour
     public virtual void HitPlayer(PlayerMovement playerMovement, Vector3 force)
     {
         playerMovement.ApplyForce(force, stunDuration, forceMode);
+        playerMovement.GetComponent<CharacterAudioController>().PlayClipByType(AudioType.TakeDamage);
     }
 
     public virtual void FixedUpdateHazard()

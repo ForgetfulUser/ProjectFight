@@ -58,7 +58,7 @@ public class EnemyAnimationController : MonoBehaviour
             }
         }
 
-        characterAudioController.PlayMovementClip();
+        characterAudioController.PlayClipByType(AudioType.Move);
         animator.SetBool(isMovingParameter, isMoving);
     }
 
@@ -69,7 +69,7 @@ public class EnemyAnimationController : MonoBehaviour
 
     public void PlayPush()
     {
-        characterAudioController.PlayAttackClip();
+        characterAudioController.PlayClipByType(AudioType.Attack);
         if (animator == null)
         {
             return;
