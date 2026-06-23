@@ -19,7 +19,6 @@ public class PlayerSelectionManager : MonoBehaviour
 
     public void SelectPlayer(PlayerInput playerInput)
     {
-        Debug.Log("Player selected");
         for (int i = 0; i < playerInput.devices.Count; i++)
         {
             if (DeviceIDs.Contains(playerInput.devices[i].deviceId)) return;

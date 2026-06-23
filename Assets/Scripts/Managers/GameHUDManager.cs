@@ -39,10 +39,11 @@ public class GameHUDManager : MonoBehaviour
 
     public void UpdatePlayerHealLives()
     {
-        for (int i = 0;  i < PlayerLivesSpriteRender.Count; i++)
+        for (int i = PlayerLivesSpriteRender.Count - 1;  i >= 0; i--)
         {
             if(i >= Players.Count)
             {
+                Debug.Log("index: " + i);
                 PlayerLivesSpriteRender[i].transform.parent.gameObject.SetActive(false);
                 continue;
             }
