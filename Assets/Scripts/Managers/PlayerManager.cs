@@ -108,7 +108,6 @@ public class PlayerManager : MonoBehaviour
             if(InactivePlayers.Contains(player)) continue;
             lastPlayerStanding = player;
         }
-        Debug.Log("Last Player: " + lastPlayerStanding);
         return lastPlayerStanding;
     }
 }

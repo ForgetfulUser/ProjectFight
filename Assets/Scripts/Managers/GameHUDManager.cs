@@ -43,7 +43,6 @@ public class GameHUDManager : MonoBehaviour
         {
             if(i >= Players.Count)
             {
-                Debug.Log("index: " + i);
                 PlayerLivesSpriteRender[i].transform.parent.gameObject.SetActive(false);
                 continue;
             }
