@@ -6,8 +6,11 @@ public class MainMenuPlayer : MonoBehaviour
 {
     public int playerID;
 
+    private float playerRadius;
+
     private void Start()
     {
+        Debug.Log("Hello");
         if (GetComponent<PlayerInput>().devices.Count > 0)
         {
             Destroy(gameObject);

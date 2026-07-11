@@ -75,7 +75,7 @@ public class PlayerManager : MonoBehaviour
     private void SpawnPlayers(bool canJump)
     {
         if (TestingPlayer) return;
-        for(int i = PlayerIDs.Count - 1; i >= 0 ; i--)
+        for(int i = 0; i < PlayerIDs.Count ; i++)
         {
             Player player = Instantiate(Player_PRFB, PlayerSpawnPosition[i], Quaternion.identity);
             player.StartPlayer(canJump, i);
